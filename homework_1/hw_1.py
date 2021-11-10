@@ -42,6 +42,14 @@ print("strel MORPH_CROSS")
 print(strel_cr)
 
 nois_1_eros = cv2.morphologyEx(nois_1, cv2.MORPH_ERODE, strel_cr)
+
 cv2.namedWindow('nois_1_eros')
 cv2.imshow('nois_1_eros', nois_1_eros)
 cv2.waitKey(0)
+
+# Converting to Binary image:
+# filt_med_1_bin = cv2.threshold(nois_1_after_median,0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+#
+# cv2.namedWindow('filt_med_1_bin')
+# cv2.imshow('filt_med_1_bin', filt_med_1_bin)
+# cv2.waitKey(0)
