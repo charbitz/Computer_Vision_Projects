@@ -53,8 +53,9 @@ cv2.imshow('nois_1_eros', nois_1_eros_r)
 cv2.waitKey(0)
 
 # Converting to Binary image:
-# filt_med_1_bin = cv2.threshold(nois_1_after_median,0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-#
-# cv2.namedWindow('filt_med_1_bin')
-# cv2.imshow('filt_med_1_bin', filt_med_1_bin)
-# cv2.waitKey(0)
+retval, filt_med_1_bin = cv2.threshold(nois_1_after_median, thresh=200, maxval = 255, type=cv2.THRESH_BINARY )           # a first test of the function
+
+cv2.namedWindow('filt_med_1_bin')
+filt_med_1_bin_r = cv2.resize(filt_med_1_bin, (650, 800))
+cv2.imshow('filt_med_1_bin', filt_med_1_bin_r)
+cv2.waitKey(0)
