@@ -11,11 +11,13 @@ print(orig_1.shape)
 print(nois_1.shape)
 
 cv2.namedWindow('1_original')
-cv2.imshow('1_original', orig_1)
+orig_1_r = cv2.resize(orig_1, (650, 800))
+cv2.imshow('1_original', orig_1_r)
 cv2.waitKey(0)
 
 cv2.namedWindow('1_noise')
-cv2.imshow('1_noise', nois_1)
+nois_1_r = cv2.resize(nois_1, (650, 800))
+cv2.imshow('1_noise', nois_1_r)
 cv2.waitKey(0)
 
 # Linear filtering:
@@ -26,13 +28,15 @@ kernel = 1/9*np.ones((3,3))
 nois_1_filt = cv2.filter2D(nois_1, cv2.CV_8UC1, kernel)
 
 cv2.namedWindow('1_noise_filtered')
-cv2.imshow('1_noise_filtered', nois_1_filt)
+nois_1_filt_r = cv2.resize(nois_1_filt, (650, 800))
+cv2.imshow('1_noise_filtered', nois_1_filt_r)
 cv2.waitKey(0)
 
-nois_1_after_median = cv2.medianBlur(nois_1,3)
+nois_1_after_median = cv2.medianBlur(nois_1, ksize=3)
 
 cv2.namedWindow('nois_1_after_median')
-cv2.imshow('nois_1_after_median', nois_1_after_median)
+nois_1_after_median_r = cv2.resize(nois_1_after_median, (650, 800))
+cv2.imshow('nois_1_after_median', nois_1_after_median_r)
 cv2.waitKey(0)
 
 # Non linear filtering:
@@ -44,7 +48,8 @@ print(strel_cr)
 nois_1_eros = cv2.morphologyEx(nois_1, cv2.MORPH_ERODE, strel_cr)
 
 cv2.namedWindow('nois_1_eros')
-cv2.imshow('nois_1_eros', nois_1_eros)
+nois_1_eros_r = cv2.resize(nois_1_eros, (650, 800))
+cv2.imshow('nois_1_eros', nois_1_eros_r)
 cv2.waitKey(0)
 
 # Converting to Binary image:
