@@ -20,17 +20,7 @@ nois_1_r = cv2.resize(nois_1, (650, 800))
 cv2.imshow('1_noise', nois_1_r)
 cv2.waitKey(0)
 
-# Linear filtering:
-
-# kernel = np.array([[-8,0,8], [-2,0,2], [-8,0,8]])
-kernel = 1/9*np.ones((3,3))
-
-nois_1_filt = cv2.filter2D(nois_1, cv2.CV_8UC1, kernel)
-
-cv2.namedWindow('1_noise_filtered')
-nois_1_filt_r = cv2.resize(nois_1_filt, (650, 800))
-cv2.imshow('1_noise_filtered', nois_1_filt_r)
-cv2.waitKey(0)
+# Median filtering:
 
 nois_1_after_median = cv2.medianBlur(nois_1, ksize=3)
 
@@ -39,20 +29,9 @@ nois_1_after_median_r = cv2.resize(nois_1_after_median, (650, 800))
 cv2.imshow('nois_1_after_median', nois_1_after_median_r)
 cv2.waitKey(0)
 
-# Non linear filtering:
-
-strel_cr = cv2.getStructuringElement(cv2.MORPH_CROSS, (3,3))
-print("strel MORPH_CROSS")
-print(strel_cr)
-
-nois_1_eros = cv2.morphologyEx(nois_1, cv2.MORPH_ERODE, strel_cr)
-
-cv2.namedWindow('nois_1_eros')
-nois_1_eros_r = cv2.resize(nois_1_eros, (650, 800))
-cv2.imshow('nois_1_eros', nois_1_eros_r)
-cv2.waitKey(0)
 
 # Converting to Binary image:
+
 retval, filt_med_1_bin = cv2.threshold(nois_1_after_median, thresh=200, maxval = 255, type=cv2.THRESH_BINARY )           # a first test of the function
 
 cv2.namedWindow('filt_med_1_bin')
