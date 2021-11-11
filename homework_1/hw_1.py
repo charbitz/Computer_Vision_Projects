@@ -29,7 +29,6 @@ nois_1_after_median_r = cv2.resize(nois_1_after_median, (650, 800))
 cv2.imshow('nois_1_after_median', nois_1_after_median_r)
 cv2.waitKey(0)
 
-
 # Converting to Binary image:
 
 retval, filt_med_1_bin = cv2.threshold(nois_1_after_median, thresh=200, maxval = 255, type=cv2.THRESH_BINARY )           # a first test of the function
