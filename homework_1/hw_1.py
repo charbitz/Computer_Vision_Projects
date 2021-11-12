@@ -21,7 +21,7 @@ nois_1_r = cv2.resize(nois_1, (650, 800))
 cv2.imshow('1_noise', nois_1_r)
 cv2.waitKey(0)
 
-# Median filtering:
+# Median filtering:             This is going to be implemented without OpenCV methods !!!
 
 nois_1_after_median = cv2.medianBlur(nois_1, ksize=3)
 
@@ -36,14 +36,33 @@ plt.hist(nois_1_after_median.ravel(),256,[0,256])
 plt.title("Histogram of nois_1_after_median")
 plt.show()
 
-# Converting to Binary image:
+# Converting the image 'dataset/1_noise' to a Binary image:
 
-retval, filt_med_1_bin = cv2.threshold(nois_1_after_median, thresh=215, maxval = 255, type=cv2.THRESH_BINARY)           #  first tests of the function
+retval_no, filt_med_1_bin = cv2.threshold(nois_1_after_median, thresh=215, maxval = 255, type=cv2.THRESH_BINARY)           #  first tests of the function
 
 cv2.namedWindow('filt_med_1_bin')
 filt_med_1_bin_r = cv2.resize(filt_med_1_bin, (650, 800))
 cv2.imshow('filt_med_1_bin', filt_med_1_bin_r)
 cv2.waitKey(0)
+
+# Converting the image 'dataset/1_original' to a Binary image:
+
+retval_or, orig_1_bin = cv2.threshold(orig_1, thresh=215, maxval = 255, type=cv2.THRESH_BINARY)                            #  first tests of the function
+
+cv2.namedWindow('orig_1_bin')
+orig_1_bin_r = cv2.resize(orig_1_bin, (650, 800))
+cv2.imshow('orig_1_bin', orig_1_bin_r)
+cv2.waitKey(0)
+
+
+
+
+
+
+
+
+
+
 
 # Computing an integral image. It'll be helpfull later:
 
