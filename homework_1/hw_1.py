@@ -54,8 +54,28 @@ orig_1_bin_r = cv2.resize(orig_1_bin, (650, 800))
 cv2.imshow('orig_1_bin', orig_1_bin_r)
 cv2.waitKey(0)
 
+# Boundary extraction of 'dataset/1_original' binary image :
 
+kernel = np.ones((3,3),np.uint8)
+orig_1_bin_bound = cv2.morphologyEx(orig_1_bin, cv2.MORPH_GRADIENT, kernel)
 
+cv2.namedWindow('orig_1_bin_bound')
+orig_1_bin_bound_r = cv2.resize(orig_1_bin_bound, (650, 800))
+# cv2.imshow('orig_1_bin_bound', orig_1_bin_bound_r)
+cv2.imshow('orig_1_bin_bound', orig_1_bin_bound)
+
+cv2.waitKey(0)
+
+# Boundary extraction of 'dataset/1_noise' binary image :
+
+# kernel = np.ones((3,3),np.uint8)
+nois_1_bin_bound = cv2.morphologyEx(filt_med_1_bin, cv2.MORPH_GRADIENT, kernel)
+
+cv2.namedWindow('nois_1_bin_bound')
+nois_1_bin_bound_r = cv2.resize(nois_1_bin_bound, (650, 800))
+# cv2.imshow('nois_1_bin_bound', nois_1_bin_bound_r)
+cv2.imshow('nois_1_bin_bound', nois_1_bin_bound)
+cv2.waitKey(0)
 
 
 
