@@ -44,3 +44,20 @@ cv2.namedWindow('filt_med_1_bin')
 filt_med_1_bin_r = cv2.resize(filt_med_1_bin, (650, 800))
 cv2.imshow('filt_med_1_bin', filt_med_1_bin_r)
 cv2.waitKey(0)
+
+# Computing an integral image. It'll be helpfull later:
+
+# HERE my_image = orig_1 e.g. LATER PUT my_image = {the desirable image } :
+my_image = orig_1
+my_image_int = cv2.integral(my_image)
+
+# Printing the dimensions of the integral image to check:
+print("integral image of orig_1 and shape:", my_image_int.shape)
+
+# Because the dimensions of the integral image are +1 row and +1 col (the first ones are the additionals), we have to delete them:
+# It was checked from the print of the shape and from the debugger (ndarray view as array).
+
+my_image_int_del = np.delete(my_image_int, 0, 0)
+my_image_int_del = np.delete(my_image_int_del, 0, 1)
+
+print("integral image of orig_1 and shape after deleting:", my_image_int_del.shape)
