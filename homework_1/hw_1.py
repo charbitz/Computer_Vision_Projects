@@ -38,7 +38,7 @@ plt.show()
 
 # Converting the image 'dataset/1_noise' to a Binary image:
 
-retval_no, filt_med_1_bin = cv2.threshold(nois_1_after_median, thresh=215, maxval = 255, type=cv2.THRESH_BINARY)           #  first tests of the function
+retval_no, filt_med_1_bin = cv2.threshold(nois_1_after_median, thresh=215, maxval=255, type=cv2.THRESH_BINARY_INV)           #  first tests of the function
 
 cv2.namedWindow('filt_med_1_bin')
 filt_med_1_bin_r = cv2.resize(filt_med_1_bin, (650, 800))
@@ -47,7 +47,7 @@ cv2.waitKey(0)
 
 # Converting the image 'dataset/1_original' to a Binary image:
 
-retval_or, orig_1_bin = cv2.threshold(orig_1, thresh=215, maxval = 255, type=cv2.THRESH_BINARY)                            #  first tests of the function
+retval_or, orig_1_bin = cv2.threshold(orig_1, thresh=215, maxval=255, type=cv2.THRESH_BINARY_INV)                            #  first tests of the function
 
 cv2.namedWindow('orig_1_bin')
 orig_1_bin_r = cv2.resize(orig_1_bin, (650, 800))
