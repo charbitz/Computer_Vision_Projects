@@ -61,7 +61,6 @@ orig_1_bin_bound = cv2.morphologyEx(orig_1_bin, cv2.MORPH_GRADIENT, kernel)
 
 cv2.namedWindow('orig_1_bin_bound')
 orig_1_bin_bound_r = cv2.resize(orig_1_bin_bound, (650, 800))
-# cv2.imshow('orig_1_bin_bound', orig_1_bin_bound_r)
 cv2.imshow('orig_1_bin_bound', orig_1_bin_bound)
 
 cv2.waitKey(0)
@@ -72,7 +71,6 @@ nois_1_bin_bound = cv2.morphologyEx(filt_med_1_bin, cv2.MORPH_GRADIENT, kernel)
 
 cv2.namedWindow('nois_1_bin_bound')
 nois_1_bin_bound_r = cv2.resize(nois_1_bin_bound, (650, 800))
-# cv2.imshow('nois_1_bin_bound', nois_1_bin_bound_r)
 cv2.imshow('nois_1_bin_bound', nois_1_bin_bound)
 cv2.waitKey(0)
 
@@ -87,16 +85,24 @@ cv2.waitKey(0)
 
 
 # Taking the connected components of the 'dataset/1_original' binary image. It'll be helpful later :
+
 or_1_con_comp_labels, or_1_con_comp = cv2.connectedComponents(orig_1_bin)
 
 cv2.namedWindow('or_1_con_comp')
 or_1_con_comp_r = cv2.resize(or_1_con_comp.astype('uint8'), (650, 800))                 ##### worked with " .astype('uint8') " (THIS DETAIL IS ONLY FOR RESIZING)
 cv2.imshow('or_1_con_comp', or_1_con_comp_r)
-# cv2.imshow('or_1_con_comp', or_1_con_comp)
 cv2.waitKey(0)
 
 print(or_1_con_comp_labels)
 
+# Normalizing the pixel values of the 'dataset/1_original' image with the connected components  DONT KNOW IF IT WILL BE HELPFUL :
+
+or_1_con_comp_norm = cv2.normalize(or_1_con_comp, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+
+cv2.namedWindow('or_1_con_comp')
+or_1_con_comp_norm_r = cv2.resize(or_1_con_comp_norm.astype('uint8'), (650, 800))                 ##### worked with " .astype('uint8') " (THIS DETAIL IS ONLY FOR RESIZING)
+cv2.imshow('or_1_con_comp', or_1_con_comp_norm_r)
+cv2.waitKey(0)
 
 
 
