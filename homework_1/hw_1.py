@@ -68,7 +68,6 @@ cv2.waitKey(0)
 
 # Boundary extraction of 'dataset/1_noise' binary image :
 
-# kernel = np.ones((3,3),np.uint8)
 nois_1_bin_bound = cv2.morphologyEx(filt_med_1_bin, cv2.MORPH_GRADIENT, kernel)
 
 cv2.namedWindow('nois_1_bin_bound')
@@ -84,7 +83,24 @@ cv2.waitKey(0)
 
 
 
-# Computing an integral image. It'll be helpfull later:
+
+
+
+# Taking the connected components of the 'dataset/1_original' binary image. It'll be helpful later :
+or_1_con_comp_labels, or_1_con_comp = cv2.connectedComponents(orig_1_bin)
+
+cv2.namedWindow('or_1_con_comp')
+or_1_con_comp_r = cv2.resize(or_1_con_comp.astype('uint8'), (650, 800))                 ##### worked with " .astype('uint8') " (THIS DETAIL IS ONLY FOR RESIZING)
+cv2.imshow('or_1_con_comp', or_1_con_comp_r)
+# cv2.imshow('or_1_con_comp', or_1_con_comp)
+cv2.waitKey(0)
+
+print(or_1_con_comp_labels)
+
+
+
+
+# Computing an integral image. It'll be helpful later:
 
 # HERE my_image = orig_1 e.g. LATER PUT my_image = {the desirable image } :
 my_image = orig_1
