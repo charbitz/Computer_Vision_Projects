@@ -58,27 +58,28 @@ cv2.waitKey(0)
 # Computing the cv2.findContours() :
 image_bin_contours = cv2.findContours(image=image_bin, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 
-image_contours = image_bin_contours[0]
-
-cv2.namedWindow('im_bin_contours')
-image_contours_r = cv2.resize(image_contours, (650, 800))
-cv2.imshow('im_bin_contours', image_contours_r)
-cv2.waitKey(0)
-
 # Making a copy of the initial image:
 image_copy = image.copy()
 
-# Computing the cv2.boundingRect():
-bx, by, bw, bh = cv2.boundingRect(image_contours)
 
-# Computing the cv2.rectangle() :
-cv2.rectangle(image_copy, (bx, by), (bx + bw, by + bh), (0, 0, 255), 3)                                 # FIRST RESULTS, NEED CORRECTION
+image_contours = image_bin_contours[0] if len(image_bin_contours) == 2 else image_bin_contours[1]         # THIS MAY BE SIMPLE AS : image_contours = image_bin_contours[1]
+
+
+counter = 0
+
+# Computing the cv2.boundingRect() and cv2.rectangle() :
+for cntr in image_contours:
+    counter += 1
+    x, y, w, h = cv2.boundingRect(cntr)
+    cv2.rectangle(img = image_copy, pt1=(x, y), pt2=(x+w, y+h), color=(0, 0, 255), thickness=2)
+    if counter < 11 :                                                                                     # THIS IS FOR PRINTING SOME RESULTS, DELETE AT THE END !!!
+        print("new_cntr :", cntr)
+        print("x,y,w,h:", x, y, w, h)
 
 cv2.namedWindow('image_copy')
 image_copy_r = cv2.resize(image_copy, (650, 800))
 cv2.imshow('image_copy', image_copy_r)
 cv2.waitKey(0)
-
 
 
 
