@@ -48,20 +48,28 @@ cv2.waitKey(0)
 
 
 # Using dilation before finding the contours, in order to extract bigger regions of objects :
-strel_rec = cv2.getStructuringElement(cv2.MORPH_RECT, (30, 30))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
+strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (30, 30))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
 print("strel MORPH_RECT")
-print(strel_rec)
+print(strel_dil)
 
-image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_rec)
+image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil)
 
 cv2.namedWindow('image_dil')
 image_dil_r = cv2.resize(image_dil, (650, 800))
 cv2.imshow('image_dil', image_dil_r)
 cv2.waitKey(0)
 
+# Using closing after dilation in order to close the gaps that are still there :
+strel_cls = cv2.getStructuringElement(cv2.MORPH_RECT, (20, 20))
+image_close = cv2.morphologyEx(image_dil, cv2.MORPH_CLOSE, strel_cls)
+
+cv2.namedWindow('image_close')
+image_close_r = cv2.resize(image_close, (650, 800))
+cv2.imshow('image_close', image_close_r)
+cv2.waitKey(0)
 
 # Computing the cv2.findContours() :
-image_bin_contours = cv2.findContours(image=image_dil, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
+image_bin_contours = cv2.findContours(image=image_close, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 
 # Making a copy of the initial image:
 image_copy = image.copy()
