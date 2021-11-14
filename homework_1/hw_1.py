@@ -46,14 +46,6 @@ image_bin_r = cv2.resize(image_bin, (650, 800))
 cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
 
-# Boundary extraction of binary image :                                                                 # NOT SURE IF THAT WILL HELP !!!
-kernel = np.ones((3,3), np.uint8)
-image_bin_bounds = cv2.morphologyEx(image_bin, cv2.MORPH_GRADIENT, kernel)
-
-cv2.namedWindow('image_bin_bounds')
-image_bin_bounds_r = cv2.resize(image_bin_bounds, (650, 800))
-cv2.imshow('image_bin_bounds', image_bin_bounds_r)
-cv2.waitKey(0)
 
 # Computing the cv2.findContours() :
 image_bin_contours = cv2.findContours(image=image_bin, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
@@ -82,6 +74,21 @@ cv2.imshow('image_copy', image_copy_r)
 cv2.waitKey(0)
 
 
+
+
+
+
+
+
+
+# Boundary extraction of binary image :                                                                 # NOT SURE IF THAT WILL HELP !!!
+kernel = np.ones((3,3), np.uint8)
+image_bin_bounds = cv2.morphologyEx(image_bin, cv2.MORPH_GRADIENT, kernel)
+
+cv2.namedWindow('image_bin_bounds')
+image_bin_bounds_r = cv2.resize(image_bin_bounds, (650, 800))
+cv2.imshow('image_bin_bounds', image_bin_bounds_r)
+cv2.waitKey(0)
 
 
 
