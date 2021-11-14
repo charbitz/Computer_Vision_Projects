@@ -47,15 +47,26 @@ cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
 
 
+# Using dilation before finding the contours, in order to extract bigger regions of objects :
+strel_rec = cv2.getStructuringElement(cv2.MORPH_RECT, (30, 30))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
+print("strel MORPH_RECT")
+print(strel_rec)
+
+image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_rec)
+
+cv2.namedWindow('image_dil')
+image_dil_r = cv2.resize(image_dil, (650, 800))
+cv2.imshow('image_dil', image_dil_r)
+cv2.waitKey(0)
+
+
 # Computing the cv2.findContours() :
-image_bin_contours = cv2.findContours(image=image_bin, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
+image_bin_contours = cv2.findContours(image=image_dil, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 
 # Making a copy of the initial image:
 image_copy = image.copy()
 
-
 image_contours = image_bin_contours[0] if len(image_bin_contours) == 2 else image_bin_contours[1]         # THIS MAY BE SIMPLE AS : image_contours = image_bin_contours[1]
-
 
 counter = 0
 
