@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import statistics as st
 
 image_path = 'dataset/1_noise.png'
 
@@ -23,20 +24,41 @@ cv2.waitKey(0)
 image_gr = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
 if noise == 1 :
-    # Median filtering :                                                                                # This is going to be implemented without OpenCV methods !!!
-    filtered_image_gr = cv2.medianBlur(image_gr, ksize=3)
+    # Median filtering :
+    image_filt_cv = cv2.medianBlur(image_gr, ksize=3)
 
-    cv2.namedWindow('filtered_image_gr')
-    filtered_image_gr_r = cv2.resize(filtered_image_gr, (650, 800))
-    cv2.imshow('filtered_image_gr', filtered_image_gr_r)
+
+    # Median filtering without using an OpenCV method :
+    # Firstly we should use zero padding :
+    image_gr_pad = np.pad(image_gr, ((1, 1), (1, 1)), 'constant')
+
+    print("The shape of the input image in grayscale with zero padding is:", image_gr_pad.shape)
+
+    image_filt_alg = image_gr_pad.copy()
+
+    for i in range(1, image_gr_pad.shape[0] - 1):
+        for j in range(1, image_gr_pad.shape[1] - 1):
+            neighborhood = [image_gr_pad[i-1][j-1], image_gr_pad[i-1][j], image_gr_pad[i-1][j+1],
+                            image_gr_pad[i][j-1], image_gr_pad[i][j], image_gr_pad[i][j+1],
+                            image_gr_pad[i+1][j-1], image_gr_pad[i+1][j], image_gr_pad[i+1][j+1]]
+            image_filt_alg[i][j] = st.median(neighborhood)
+
+    cv2.namedWindow('image_filt_cv')
+    image_filt_cv_r = cv2.resize(image_filt_cv, (650, 800))
+    cv2.imshow('image_filt_cv', image_filt_cv_r)
+    cv2.waitKey(0)
+
+    cv2.namedWindow('image_filt_alg')
+    image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
+    cv2.imshow('image_filt_alg', image_filt_alg_r)
     cv2.waitKey(0)
 
     # Computing the histogram of the filtered image:
-    plt.hist(filtered_image_gr.ravel(), 256, [0, 256])
+    plt.hist(image_filt_cv.ravel(), 256, [0, 256])
     plt.title("Histogram of nois_1_after_median")
     plt.show()
 
-    image_gr = filtered_image_gr
+    image_gr = image_filt_cv
 
 # Converting to a binary image with the cv2.threshold() :
 retval, image_bin = cv2.threshold(image_gr, thresh=215, maxval=255, type=cv2.THRESH_BINARY_INV)         #  first tests of the function
