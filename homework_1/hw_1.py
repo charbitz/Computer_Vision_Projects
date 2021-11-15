@@ -30,33 +30,33 @@ if noise == 1 :
 
     # Median filtering without using an OpenCV method :
     # Firstly we should use zero padding :
-    image_gr_pad = np.pad(image_gr, ((1, 1), (1, 1)), 'constant')
-
-    print("The shape of the input image in grayscale with zero padding is:", image_gr_pad.shape)
-
-    image_filt_alg = image_gr_pad.copy()
-
-    for i in range(1, image_gr_pad.shape[0] - 1):
-        for j in range(1, image_gr_pad.shape[1] - 1):
-            neighborhood = [image_gr_pad[i-1][j-1], image_gr_pad[i-1][j], image_gr_pad[i-1][j+1],
-                            image_gr_pad[i][j-1], image_gr_pad[i][j], image_gr_pad[i][j+1],
-                            image_gr_pad[i+1][j-1], image_gr_pad[i+1][j], image_gr_pad[i+1][j+1]]
-            image_filt_alg[i][j] = st.median(neighborhood)
+    # image_gr_pad = np.pad(image_gr, ((1, 1), (1, 1)), 'constant')
+    #
+    # print("The shape of the input image in grayscale with zero padding is:", image_gr_pad.shape)
+    #
+    # image_filt_alg = image_gr_pad.copy()
+    #
+    # for i in range(1, image_gr_pad.shape[0] - 1):
+    #     for j in range(1, image_gr_pad.shape[1] - 1):
+    #         neighborhood = [image_gr_pad[i-1][j-1], image_gr_pad[i-1][j], image_gr_pad[i-1][j+1],
+    #                         image_gr_pad[i][j-1], image_gr_pad[i][j], image_gr_pad[i][j+1],
+    #                         image_gr_pad[i+1][j-1], image_gr_pad[i+1][j], image_gr_pad[i+1][j+1]]
+    #         image_filt_alg[i][j] = st.median(neighborhood)
 
     cv2.namedWindow('image_filt_cv')
     image_filt_cv_r = cv2.resize(image_filt_cv, (650, 800))
     cv2.imshow('image_filt_cv', image_filt_cv_r)
     cv2.waitKey(0)
 
-    cv2.namedWindow('image_filt_alg')
-    image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
-    cv2.imshow('image_filt_alg', image_filt_alg_r)
-    cv2.waitKey(0)
+    # cv2.namedWindow('image_filt_alg')
+    # image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
+    # cv2.imshow('image_filt_alg', image_filt_alg_r)
+    # cv2.waitKey(0)
 
     # Computing the histogram of the filtered image:
-    plt.hist(image_filt_cv.ravel(), 256, [0, 256])
-    plt.title("Histogram of nois_1_after_median")
-    plt.show()
+    # plt.hist(image_filt_cv.ravel(), 256, [0, 256])
+    # plt.title("Histogram of nois_1_after_median")
+    # plt.show()
 
     image_gr = image_filt_cv
 
@@ -67,7 +67,6 @@ cv2.namedWindow('image_bin')
 image_bin_r = cv2.resize(image_bin, (650, 800))
 cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
-
 
 # Using dilation before finding the contours, in order to extract bigger regions of objects :
 strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (30, 30))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
