@@ -103,6 +103,7 @@ for cntr in image_contours:
     counter += 1
     x, y, w, h = cv2.boundingRect(cntr)
     cv2.rectangle(img = image_copy, pt1=(x, y), pt2=(x+w, y+h), color=(0, 0, 255), thickness=2)
+    cv2.putText(img=image_copy, text=str(counter), org=(x,y+50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=4, lineType=1, bottomLeftOrigin=0)
     if counter < 11 :                                                                                     # THIS IS FOR PRINTING SOME RESULTS, DELETE AT THE END !!!
         print("new_cntr :", cntr)
         print("x,y,w,h:", x, y, w, h)
