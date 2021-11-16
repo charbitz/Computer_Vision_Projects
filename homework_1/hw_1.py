@@ -21,11 +21,14 @@ image_r = cv2.resize(image, (650, 800))
 cv2.imshow('image', image_r)
 cv2.waitKey(0)
 
-image_filtered = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+image_gr = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+# This is the image, in which for "original" data images (noise = 0), we are going to implement thresholding :
+image_to_bin = image_gr
 
 if noise == 1 :
     # Median filtering :
-    image_filt_cv = cv2.medianBlur(image_filtered, ksize=3)
+    image_filt_cv = cv2.medianBlur(image_gr, ksize=3)
 
     # Median filtering without using an OpenCV method :
     # Firstly we should use zero padding :
@@ -57,10 +60,12 @@ if noise == 1 :
     # plt.title("Histogram of nois_1_after_median")
     # plt.show()
 
-    image_filtered = image_filt_cv
+    # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
+    image_to_bin = image_filt_cv
+    # print(image_filtered.shape)
 
 # Converting to a binary image with the cv2.threshold() :
-thresh_otsu, image_bin = cv2.threshold(image_filtered, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
+thresh_otsu, image_bin = cv2.threshold(src=image_to_bin, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
 
 cv2.namedWindow('image_bin')
 image_bin_r = cv2.resize(image_bin, (650, 800))
