@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statistics as st
 
-image_path = 'dataset/1_noise.png'
+image_path = 'dataset/1_original.png'
 
 noise_images = ('dataset/1_noise.png', 'dataset/2_noise.png', 'dataset/3_noise.png', 'dataset/4_noise.png', 'dataset/5_noise.png')
 
@@ -104,9 +104,25 @@ for cntr in image_contours:
     x, y, w, h = cv2.boundingRect(cntr)
     cv2.rectangle(img = image_copy, pt1=(x, y), pt2=(x+w, y+h), color=(0, 0, 255), thickness=2)
     cv2.putText(img=image_copy, text=str(counter), org=(x,y+50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=4, lineType=1, bottomLeftOrigin=0)
-    if counter < 11 :                                                                                     # THIS IS FOR PRINTING SOME RESULTS, DELETE AT THE END !!!
-        print("new_cntr :", cntr)
-        print("x,y,w,h:", x, y, w, h)
+    # if counter < 11 :                                                                                     # THIS IS FOR PRINTING SOME RESULTS, DELETE AT THE END !!!
+    #     print("new_cntr :", cntr)
+    #     print("x,y,w,h:", x, y, w, h)
+
+    #   Computing the text surface of a region (question 2a) :
+    text_pxls = 0
+
+    for i in range(y, y+h+1):
+        for j in range(x, x+w+1):
+            if (image_bin[i][j] == 255):
+                text_pxls += 1
+
+    print("---- Region ", counter, ": ----")
+    print("Area (px): ", text_pxls)
+
+    #   Computing the bounding box surface of a region (question 2b) :
+    bound_box_pxls = w*h
+
+    print("Bounding Box Area(px): ", bound_box_pxls)
 
 cv2.namedWindow('image_copy')
 image_copy_r = cv2.resize(image_copy, (650, 800))
