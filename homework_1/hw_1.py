@@ -83,7 +83,7 @@ cv2.imshow('image_dil', image_dil_r)
 cv2.waitKey(0)
 
 # Then we apply erosion to set apart the desirable regions :
-strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (55, 55))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
+strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
 print("strel MORPH_RECT")
 print(strel_eros)
 
@@ -185,7 +185,7 @@ cv2.waitKey(0)
 # Computing an integral image. It'll be helpful later:
 
 # HERE my_image = image_gr e.g. LATER PUT my_image = {the desirable image } :
-my_image = image_filtered
+my_image = image_to_bin
 my_image_int = cv2.integral(my_image)
 
 # Printing the dimensions of the integral image to check:
