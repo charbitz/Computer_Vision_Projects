@@ -112,7 +112,8 @@ for cntr in image_contours:
     # if counter < 11 :                                                                                     # THIS IS FOR PRINTING SOME RESULTS, DELETE AT THE END !!!
     #     print("new_cntr :", cntr)
     #     print("x,y,w,h:", x, y, w, h)
-    #   Computing the text surface of a region (question 2a) :
+
+    #   Computing the text-pixel area of a region (question 2a) :
     text_pxls = 0
 
     for i in range(y, y+h+1):
@@ -123,10 +124,20 @@ for cntr in image_contours:
     print("---- Region ", counter, ": ----")
     print("Area (px): ", text_pxls)
 
-    #   Computing the bounding box surface of a region (question 2b) :
+    #   Computing the bounding box-pixel area of a region (question 2b) :
     bound_box_pxls = w*h
 
     print("Bounding Box Area(px): ", bound_box_pxls)
+
+
+    # NOT SURE IMPLEMETANTION !!!!!!!!!!!!!!!!!!!!
+    # Computing the number of words in a region (question 2c):
+    # We'll use the cv2.connectedComponents() :
+    comp_labels, image_con_comp = cv2.connectedComponents(image_bin[x:x+w][y:y+h])
+
+    print("contour: ", counter, "There are ", comp_labels, "words.")
+    # NOT SURE IMPLEMETANTION !!!!!!!!!!!!!!!!!!!
+
 
 cv2.namedWindow('image_copy')
 image_copy_r = cv2.resize(image_copy, (650, 800))
