@@ -21,11 +21,11 @@ image_r = cv2.resize(image, (650, 800))
 cv2.imshow('image', image_r)
 cv2.waitKey(0)
 
-image_gr = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+image_filtered = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
 if noise == 1 :
     # Median filtering :
-    image_filt_cv = cv2.medianBlur(image_gr, ksize=3)
+    image_filt_cv = cv2.medianBlur(image_filtered, ksize=3)
 
     # Median filtering without using an OpenCV method :
     # Firstly we should use zero padding :
@@ -57,10 +57,10 @@ if noise == 1 :
     # plt.title("Histogram of nois_1_after_median")
     # plt.show()
 
-    image_gr = image_filt_cv
+    image_filtered = image_filt_cv
 
 # Converting to a binary image with the cv2.threshold() :
-thresh_otsu, image_bin = cv2.threshold(image_gr, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
+thresh_otsu, image_bin = cv2.threshold(image_filtered, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
 
 cv2.namedWindow('image_bin')
 image_bin_r = cv2.resize(image_bin, (650, 800))
@@ -107,7 +107,6 @@ for cntr in image_contours:
     # if counter < 11 :                                                                                     # THIS IS FOR PRINTING SOME RESULTS, DELETE AT THE END !!!
     #     print("new_cntr :", cntr)
     #     print("x,y,w,h:", x, y, w, h)
-
     #   Computing the text surface of a region (question 2a) :
     text_pxls = 0
 
@@ -181,7 +180,7 @@ cv2.waitKey(0)
 # Computing an integral image. It'll be helpful later:
 
 # HERE my_image = image_gr e.g. LATER PUT my_image = {the desirable image } :
-my_image = image_gr
+my_image = image_filtered
 my_image_int = cv2.integral(my_image)
 
 # Printing the dimensions of the integral image to check:
