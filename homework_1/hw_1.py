@@ -72,7 +72,16 @@ image_bin_r = cv2.resize(image_bin, (650, 800))
 cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
 
-# Using some Morphological Operations before finding the contours, in order to extract bigger regions of objects :
+# Using some Morphological Operations in order to extract bigger regions of objects. Target is the words :
+strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,15))
+image_dil_words = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil_words)
+
+cv2.namedWindow('image_dil_words')
+image_dil_words_r = cv2.resize(image_dil_words, (650, 800))
+cv2.imshow('image_dil_words', image_dil_words_r)
+cv2.waitKey(0)
+
+# Using some Morphological Operations before finding the contours, in order to extract bigger regions of objects. Target is the regions of texts :
 # Starting with dilation, in order to get the text lines together as one region :
 strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
 image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil)
@@ -94,6 +103,7 @@ image_eros_r = cv2.resize(image_eros, (650, 800))
 cv2.imshow('image_eros', image_eros_r)
 cv2.waitKey(0)
 
+# Computing Contours:
 image_bin_contours = cv2.findContours(image=image_eros, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 
 # Making a copy of the initial image:
@@ -109,9 +119,10 @@ for cntr in image_contours:
     x, y, w, h = cv2.boundingRect(cntr)
     cv2.rectangle(img = image_copy, pt1=(x, y), pt2=(x+w, y+h), color=(0, 0, 255), thickness=2)
     cv2.putText(img=image_copy, text=str(counter), org=(x,y+50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=4, lineType=1, bottomLeftOrigin=0)
-    # if counter < 11 :                                                                                     # THIS IS FOR PRINTING SOME RESULTS, DELETE AT THE END !!!
-    #     print("new_cntr :", cntr)
-    #     print("x,y,w,h:", x, y, w, h)
+
+    print("@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("contour: ", counter)
+    print("x,y,w,h:", x, y, w, h)
 
     #   Computing the text-pixel area of a region (question 2a) :
     text_pxls = 0
@@ -133,9 +144,9 @@ for cntr in image_contours:
     # NOT SURE IMPLEMETANTION !!!!!!!!!!!!!!!!!!!!
     # Computing the number of words in a region (question 2c):
     # We'll use the cv2.connectedComponents() :
-    comp_labels, image_con_comp = cv2.connectedComponents(image_bin[x:x+w][y:y+h])
+    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity=8)
 
-    print("contour: ", counter, "There are ", comp_labels, "words.")
+    print("There are ", comp_labels, "words.")
     # NOT SURE IMPLEMETANTION !!!!!!!!!!!!!!!!!!!
 
 
