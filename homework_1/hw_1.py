@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statistics as st
 
-image_path = 'dataset/1_original.png'
+image_path = 'dataset/5_noise.png'
 
 noise_images = ('dataset/1_noise.png', 'dataset/2_noise.png', 'dataset/3_noise.png', 'dataset/4_noise.png', 'dataset/5_noise.png')
 
@@ -73,7 +73,7 @@ cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
 
 # Using some Morphological Operations in order to extract bigger regions of objects. Target is the words :
-strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,15))
+strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (15,8))
 image_dil_words = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil_words)
 
 cv2.namedWindow('image_dil_words')
@@ -103,13 +103,25 @@ image_eros_r = cv2.resize(image_eros, (650, 800))
 cv2.imshow('image_eros', image_eros_r)
 cv2.waitKey(0)
 
+# Then we apply closing to produce less false regions (regions with black pixels) :
+strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))
+image_close = cv2.morphologyEx(image_eros, cv2.MORPH_CLOSE, strel_close)
+
+cv2.namedWindow('image_close')
+image_close_r = cv2.resize(image_close, (650, 800))
+cv2.imshow('image_close', image_close_r)
+cv2.waitKey(0)
+
 # Computing Contours:
-image_bin_contours = cv2.findContours(image=image_eros, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
+image_bin_contours = cv2.findContours(image=image_close, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 
 # Making a copy of the initial image:
 image_copy = image.copy()
 
 image_contours = image_bin_contours[0] if len(image_bin_contours) == 2 else image_bin_contours[1]         # THIS MAY BE SIMPLE AS : image_contours = image_bin_contours[1]
+
+# This is done for the right visual requirements:
+image_contours.reverse()
 
 counter = 0
 
@@ -130,25 +142,21 @@ for cntr in image_contours:
     for i in range(y, y+h+1):
         for j in range(x, x+w+1):
             if (image_bin[i][j] == 255):
-                text_pxls += 1
+               text_pxls += 1
 
     print("---- Region ", counter, ": ----")
     print("Area (px): ", text_pxls)
 
-    #   Computing the bounding box-pixel area of a region (question 2b) :
+    # Computing the bounding box-pixel area of a region :
     bound_box_pxls = w*h
 
     print("Bounding Box Area(px): ", bound_box_pxls)
 
-
-    # NOT SURE IMPLEMETANTION !!!!!!!!!!!!!!!!!!!!
-    # Computing the number of words in a region (question 2c):
+    # Computing the number of words in a region :
     # We'll use the cv2.connectedComponents() :
     comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity=8)
 
     print("There are ", comp_labels, "words.")
-    # NOT SURE IMPLEMETANTION !!!!!!!!!!!!!!!!!!!
-
 
 cv2.namedWindow('image_copy')
 image_copy_r = cv2.resize(image_copy, (650, 800))
