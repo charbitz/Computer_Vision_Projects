@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statistics as st
 
-image_path = 'dataset/5_noise.png'
+image_path = 'dataset/1_noise.png'
 
 noise_images = ('dataset/1_noise.png', 'dataset/2_noise.png', 'dataset/3_noise.png', 'dataset/4_noise.png', 'dataset/5_noise.png')
 
@@ -22,6 +22,11 @@ cv2.imshow('image', image_r)
 cv2.waitKey(0)
 
 image_gr = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+cv2.namedWindow('image_gr')
+image_gr_r = cv2.resize(image_gr, (650, 800))
+cv2.imshow('image_gr', image_gr_r)
+cv2.waitKey(0)
 
 # This is the image, in which for "original" data images (noise = 0), we are going to implement thresholding :
 image_to_bin = image_gr
@@ -63,6 +68,19 @@ if noise == 1 :
     # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
     image_to_bin = image_filt_cv
     # print(image_filtered.shape)
+
+# Computing the integral image of the data image :
+my_image = image_to_bin
+my_image_int = cv2.integral(my_image)
+
+# Printing the dimensions of the integral image to check:
+print("The shape of the integral image is :", my_image_int.shape)
+
+# Because the dimensions of the integral image are +1 row and +1 col (the first ones are the additionals), we have to delete them :
+my_image_int_del = np.delete(my_image_int, 0, 0)
+my_image_int_del = np.delete(my_image_int_del, 0, 1)
+
+print("The shape of the integral image after processing is :", my_image_int_del.shape)
 
 # Converting to a binary image with the cv2.threshold() :
 thresh_otsu, image_bin = cv2.threshold(src=image_to_bin, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
@@ -154,9 +172,15 @@ for cntr in image_contours:
 
     # Computing the number of words in a region :
     # We'll use the cv2.connectedComponents() :
-    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity=8)
+    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity = 8)
 
-    print("There are ", comp_labels, "words.")
+    # This '-1' stands for the subtraction of the background as a label :
+    print("There are ", comp_labels - 1, "words.")
+
+    # Computing the mean grayscale value of the pixels inside the bounding box area of a region :
+    sum_gr = my_image_int_del[y + h][x + w] + my_image_int_del[y][x] - my_image_int_del[y + h][x] - my_image_int_del[y][x + w]
+    mean_gr = sum_gr / bound_box_pxls
+    print("Mean gray-level value in bounding box: ", mean_gr)
 
 cv2.namedWindow('image_copy')
 image_copy_r = cv2.resize(image_copy, (650, 800))
@@ -205,26 +229,3 @@ cv2.namedWindow('or_1_con_comp')
 image_con_comp_norm_r = cv2.resize(image_con_comp_norm.astype('uint8'), (650, 800))                     # worked with " .astype('uint8') " (THIS DETAIL IS ONLY FOR RESIZING)
 cv2.imshow('or_1_con_comp', image_con_comp_norm_r)
 cv2.waitKey(0)
-
-
-
-
-
-
-
-# Computing an integral image. It'll be helpful later:
-
-# HERE my_image = image_gr e.g. LATER PUT my_image = {the desirable image } :
-my_image = image_to_bin
-my_image_int = cv2.integral(my_image)
-
-# Printing the dimensions of the integral image to check:
-print("The shape of the integral image is :", my_image_int.shape)
-
-# Because the dimensions of the integral image are +1 row and +1 col (the first ones are the additionals), we have to delete them:
-# It was checked from the print of the shape and from the debugger (ndarray view as array).
-
-my_image_int_del = np.delete(my_image_int, 0, 0)
-my_image_int_del = np.delete(my_image_int_del, 0, 1)
-
-print("The shape of the integral image after processing is :", my_image_int_del.shape)
