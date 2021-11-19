@@ -131,8 +131,17 @@ image_close_r = cv2.resize(image_close, (650, 800))
 cv2.imshow('image_close', image_close_r)
 cv2.waitKey(0)
 
+# Then we apply dilation on the y axis to get more representative measurements :
+strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
+image_dil_y = cv2.morphologyEx(image_close, cv2.MORPH_DILATE, strel_dil_y)
+
+cv2.namedWindow('image_dil_y')
+image_dil_y_r = cv2.resize(image_dil_y, (650, 800))
+cv2.imshow('image_dil_y', image_dil_y_r)
+cv2.waitKey(0)
+
 # Computing Contours:
-image_bin_contours = cv2.findContours(image=image_close, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
+image_bin_contours = cv2.findContours(image=image_dil_y, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 
 # Making a copy of the initial image:
 image_copy = image.copy()
@@ -145,7 +154,7 @@ image_contours.reverse()
 counter = 0
 
 # Try keep data at a csv file :
-rule = "dil-er-clos-connectivity_4"  # UPDATE WHEN CHANGING !!!
+rule = "dil-er-clos-dil_y_axis-connectivity_8"  # UPDATE WHEN CHANGING !!!
 
 header = ['rule', 'region', 'pxl_area', 'bb_area', 'words', 'mean_gr_val']
 
@@ -180,7 +189,7 @@ for cntr in image_contours:
 
     # Computing the number of words in a region :
     # We'll use the cv2.connectedComponents() :
-    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity = 4)
+    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity = 8)
 
     # This '-1' stands for the subtraction of the background as a label :
     print("There are ", comp_labels - 1, "words.")
