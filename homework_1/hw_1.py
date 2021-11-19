@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import statistics as st
+import csv
 
 image_path = 'dataset/1_noise.png'
 
@@ -143,6 +144,13 @@ image_contours.reverse()
 
 counter = 0
 
+# Try keep data at a csv file :
+rule = "dil-er-clos-connectivity_8"  # UPDATE WHEN CHANGING !!!
+
+header = ['rule', 'region', 'pxl_area', 'bb_area', 'words', 'mean_gr_val']
+
+data_list = []
+
 # Computing the cv2.boundingRect() and cv2.rectangle() :
 for cntr in image_contours:
     counter += 1
@@ -181,6 +189,20 @@ for cntr in image_contours:
     sum_gr = my_image_int_del[y + h][x + w] + my_image_int_del[y][x] - my_image_int_del[y + h][x] - my_image_int_del[y][x + w]
     mean_gr = sum_gr / bound_box_pxls
     print("Mean gray-level value in bounding box: ", mean_gr)
+
+#   Try keep data at a csv file :
+    data = [rule, counter, text_pxls, bound_box_pxls, comp_labels - 1, mean_gr]
+
+    data_list.append(data)
+
+with open('measurements.csv', 'w', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
+    writer = csv.writer(f)
+
+    # write the header
+    writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
+
+    # write multiple rows
+    writer.writerows(data_list)
 
 cv2.namedWindow('image_copy')
 image_copy_r = cv2.resize(image_copy, (650, 800))
