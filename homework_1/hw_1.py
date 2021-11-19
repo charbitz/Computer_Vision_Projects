@@ -145,7 +145,7 @@ image_contours.reverse()
 counter = 0
 
 # Try keep data at a csv file :
-rule = "dil-er-clos-connectivity_8"  # UPDATE WHEN CHANGING !!!
+rule = "dil-er-clos-connectivity_4"  # UPDATE WHEN CHANGING !!!
 
 header = ['rule', 'region', 'pxl_area', 'bb_area', 'words', 'mean_gr_val']
 
@@ -180,7 +180,7 @@ for cntr in image_contours:
 
     # Computing the number of words in a region :
     # We'll use the cv2.connectedComponents() :
-    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity = 8)
+    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity = 4)
 
     # This '-1' stands for the subtraction of the background as a label :
     print("There are ", comp_labels - 1, "words.")
@@ -195,11 +195,11 @@ for cntr in image_contours:
 
     data_list.append(data)
 
-with open('measurements.csv', 'w', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
+with open('measurements.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
     writer = csv.writer(f)
 
     # write the header
-    writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
+    # writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
 
     # write multiple rows
     writer.writerows(data_list)
