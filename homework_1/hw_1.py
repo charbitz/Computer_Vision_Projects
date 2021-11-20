@@ -4,11 +4,9 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/1_noise.png'
+image_path = 'dataset/3_noise.png'
 
-noise_images = ('dataset/1_noise.png', 'dataset/2_noise.png', 'dataset/3_noise.png', 'dataset/4_noise.png', 'dataset/5_noise.png')
-
-noise = 1 if (image_path in noise_images) else 0
+noise = 1 if "noise" in image_path else 0
 
 print("The path of the input image is:", image_path)
 print("So the noise is:", noise)
@@ -60,11 +58,17 @@ if noise == 1 :
     # image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
     # cv2.imshow('image_filt_alg', image_filt_alg_r)
     # cv2.waitKey(0)
+    #
+    # # Post processing the image to delete the zero-padded rows and columns:
+    # image_filt_alg = np.delete(image_filt_alg, 0, 0)
+    # image_filt_alg = np.delete(image_filt_alg, 0, 1)
+    # image_filt_alg = np.delete(image_filt_alg, -1, 0)
+    # image_filt_alg = np.delete(image_filt_alg, -1, 1)
 
-    # Computing the histogram of the filtered image:
-    # plt.hist(image_filt_cv.ravel(), 256, [0, 256])
-    # plt.title("Histogram of nois_1_after_median")
-    # plt.show()
+    # cv2.namedWindow('image_filt_alg')
+    # image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
+    # cv2.imshow('image_filt_alg', image_filt_alg_r)
+    # cv2.waitKey(0)
 
     # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
     image_to_bin = image_filt_cv
@@ -174,10 +178,15 @@ for cntr in image_contours:
     #   Computing the text-pixel area of a region (question 2a) :
     text_pxls = 0
 
-    for i in range(y, y+h+1):
-        for j in range(x, x+w+1):
-            if (image_bin[i][j] == 255):
-               text_pxls += 1
+    # for i in range(y, y+h+1):
+    #     for j in range(x, x+w+1):
+    #         if (image_bin[i][j] == 255):
+    #            text_pxls += 1
+
+    # Cropping the image :
+    image_crop = image_bin[y:y+h, x:x+w].copy()
+
+    text_pxls = np.sum(image_crop == 255)
 
     print("---- Region ", counter, ": ----")
     print("Area (px): ", text_pxls)
@@ -195,7 +204,14 @@ for cntr in image_contours:
     print("There are ", comp_labels - 1, "words.")
 
     # Computing the mean grayscale value of the pixels inside the bounding box area of a region :
-    sum_gr = my_image_int_del[y + h][x + w] + my_image_int_del[y][x] - my_image_int_del[y + h][x] - my_image_int_del[y][x + w]
+
+    # sum_gr = my_image_int_del[y + h][x + w] + my_image_int_del[y][x] - my_image_int_del[y + h][x] - my_image_int_del[y][x + w]            # error for 3_noise
+
+    sum_gr = -my_image_int_del[y - h][x + w] - my_image_int_del[y][x] + my_image_int_del[y][x + w] + my_image_int_del[y - h][x]              # gets only a Runtimewarning for 3_noise
+
+    # sum_gr = my_image_int_del[x + w][y - h] + my_image_int_del[x][y]- my_image_int_del[x + w][y] - my_image_int_del[x][y - h]               # error for 3_noise
+
+
     mean_gr = sum_gr / bound_box_pxls
     print("Mean gray-level value in bounding box: ", mean_gr)
 
@@ -204,22 +220,23 @@ for cntr in image_contours:
 
     data_list.append(data)
 
-with open('measurements.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
-    writer = csv.writer(f)
-
-    # write the header
-    # writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
-
-    # write multiple rows
-    writer.writerows(data_list)
+# with open('measurements.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
+#     writer = csv.writer(f)
+#
+#     # write the header
+#     # writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
+#
+#     # write multiple rows
+#     writer.writerows(data_list)
 
 cv2.namedWindow('image_copy')
 image_copy_r = cv2.resize(image_copy, (650, 800))
 cv2.imshow('image_copy', image_copy_r)
 cv2.waitKey(0)
 
-
-
+# Saving the image with the text regions bounding boxes :
+write_path = "results/" + image_path[8:-4] + "_res.png"
+cv2.imwrite(write_path, image_copy)
 
 
 
