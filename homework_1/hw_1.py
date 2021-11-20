@@ -146,7 +146,7 @@ cv2.waitKey(0)
 image_bin_contours = cv2.findContours(image=image_dil_y, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
 
 # Making a copy of the initial image:
-image_copy = image.copy()
+image_to_write = image.copy()
 
 image_contours = image_bin_contours[0] if len(image_bin_contours) == 2 else image_bin_contours[1]         # THIS MAY BE SIMPLE AS : image_contours = image_bin_contours[1]
 
@@ -166,8 +166,8 @@ data_list = []
 for cntr in image_contours:
     counter += 1
     x, y, w, h = cv2.boundingRect(cntr)
-    cv2.rectangle(img = image_copy, pt1=(x, y), pt2=(x+w, y+h), color=(0, 0, 255), thickness=2)
-    cv2.putText(img=image_copy, text=str(counter), org=(x,y+50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=4, lineType=1, bottomLeftOrigin=0)
+    cv2.rectangle(img = image_to_write, pt1=(x, y), pt2=(x + w, y + h), color=(0, 0, 255), thickness=2)
+    cv2.putText(img=image_to_write, text=str(counter), org=(x, y + 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=4, lineType=1, bottomLeftOrigin=0)
 
     print("@@@@@@@@@@@@@@@@@@@@@@@@")
     print("contour: ", counter)
@@ -226,14 +226,14 @@ for cntr in image_contours:
 #     # write multiple rows
 #     writer.writerows(data_list)
 
-cv2.namedWindow('image_copy')
-image_copy_r = cv2.resize(image_copy, (650, 800))
-cv2.imshow('image_copy', image_copy_r)
+cv2.namedWindow('image_to_write')
+image_to_write_r = cv2.resize(image_to_write, (650, 800))
+cv2.imshow('image_to_write', image_to_write_r)
 cv2.waitKey(0)
 
 # Saving the image with the text regions bounding boxes :
 write_path = "results/" + image_path[8:-4] + "_res.png"
-cv2.imwrite(write_path, image_copy)
+cv2.imwrite(write_path, image_to_write)
 
 
 
