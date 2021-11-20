@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/1_original.png'
+image_path = 'dataset/3_original.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -79,11 +79,6 @@ my_image_int = cv2.integral(my_image)
 # Printing the dimensions of the integral image to check:
 print("The shape of the integral image is :", my_image_int.shape)
 
-# Because the dimensions of the integral image are +1 row and +1 col (the first ones are the additionals), we have to delete them :
-my_image_int_del = np.delete(my_image_int, 0, 0)
-my_image_int_del = np.delete(my_image_int_del, 0, 1)
-
-print("The shape of the integral image after processing is :", my_image_int_del.shape)
 
 # Converting to a binary image with the cv2.threshold() :
 thresh_otsu, image_bin = cv2.threshold(src=image_to_bin, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
@@ -201,6 +196,12 @@ for cntr in image_contours:
 
     # Cropping the image :
     image_crop = image_bin[y:y+h, x:x+w].copy()
+
+    # This imshow() will be helpful for the report
+    cv2.namedWindow('image_crop_'+str(counter))
+    cv2.imshow('image_crop_'+str(counter), image_crop)
+    cv2.waitKey(0)
+
     # text_pxls = 0
     # text_pxls = np.sum(image_crop == 255)
 
@@ -216,6 +217,12 @@ for cntr in image_contours:
     # We'll use the cv2.connectedComponents() :
     # Cropping the image :                              # THIS IS A SAVΙOR
     image_crop_words = image_dil_words[y:y + h, x:x + w].copy()
+
+    # This imshow() will be helpful for the report :
+    cv2.namedWindow('image_crop_words_' + str(counter))
+    cv2.imshow('image_crop_words_' + str(counter), image_crop_words)
+    cv2.waitKey(0)
+
     comp_labels, image_con_comp = cv2.connectedComponents(image_crop_words, connectivity = 4)
 
     # This '-1' stands for the subtraction of the background as a label :
@@ -223,7 +230,7 @@ for cntr in image_contours:
 
     # Computing the mean grayscale value of the pixels inside the bounding box area of a region :
 
-    sum_gr = my_image_int_del[y + h][x + w] + my_image_int_del[y][x] - my_image_int_del[y + h][x] - my_image_int_del[y][x + w]            #CORRECT BUT  error for 3_noise
+    sum_gr = my_image_int[y + h][x + w] + my_image_int[y][x] - my_image_int[y + h][x] - my_image_int[y][x + w]            #CORRECT for all if i use my_image_int (integral image without deleting the extra row and col)
 
     # sum_gr = -my_image_int_del[y - h][x + w] - my_image_int_del[y][x] + my_image_int_del[y][x + w] + my_image_int_del[y - h][x]              # ONLY WORKING for 3_noise
 
