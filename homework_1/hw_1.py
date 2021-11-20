@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/3_noise.png'
+image_path = 'dataset/1_original.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -94,7 +94,7 @@ cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
 
 # Using some Morphological Operations in order to extract bigger regions of objects. Target is the words :
-strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (15,8))
+strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,3))     # need to be bigger in order NOT to find more words
 image_dil_words = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil_words)
 
 cv2.namedWindow('image_dil_words')
@@ -104,6 +104,12 @@ cv2.waitKey(0)
 
 # Using some Morphological Operations before finding the contours, in order to extract bigger regions of objects. Target is the regions of texts :
 # Starting with dilation, in order to get the text lines together as one region :
+#
+# if "3" in image_path:
+#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 45))
+# else :
+#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
+
 strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
 image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil)
 
@@ -141,6 +147,19 @@ cv2.namedWindow('image_dil_y')
 image_dil_y_r = cv2.resize(image_dil_y, (650, 800))
 cv2.imshow('image_dil_y', image_dil_y_r)
 cv2.waitKey(0)
+
+# if "3" in image_path:   # MAY BE USED FOR IMAGE 3_ORIGINAL/NOISE: (CHECK WHAT)
+# #   do erosion on x axis :
+#     strel_er3_x = cv2.getStructuringElement(cv2.MORPH_RECT, (60, 2))
+#     image_er3_x = cv2.morphologyEx(image_dil_y, cv2.MORPH_ERODE, strel_er3_x)
+#
+#     cv2.namedWindow('image_er3_x')
+#     image_er3_x_r = cv2.resize(image_er3_x, (650, 800))
+#     cv2.imshow('image_er3_x', image_er3_x_r)
+#     cv2.waitKey(0)
+#
+#     # in order to have unified code
+#     image_dil_y = image_er3_x
 
 # Computing Contours:
 image_bin_contours = cv2.findContours(image=image_dil_y, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
@@ -182,11 +201,11 @@ for cntr in image_contours:
 
     # Cropping the image :
     image_crop = image_bin[y:y+h, x:x+w].copy()
-
-    text_pxls = np.sum(image_crop == 255)
+    # text_pxls = 0
+    # text_pxls = np.sum(image_crop == 255)
 
     print("---- Region ", counter, ": ----")
-    print("Area (px): ", text_pxls)
+    print("Area (px): ", np.sum(image_crop == 255))
 
     # Computing the bounding box-pixel area of a region :
     bound_box_pxls = w*h
@@ -195,16 +214,18 @@ for cntr in image_contours:
 
     # Computing the number of words in a region :
     # We'll use the cv2.connectedComponents() :
-    comp_labels, image_con_comp = cv2.connectedComponents(image_dil_words[y:y+h][x:x+w], connectivity = 4)
+    # Cropping the image :                              # THIS IS A SAVΙOR
+    image_crop_words = image_dil_words[y:y + h, x:x + w].copy()
+    comp_labels, image_con_comp = cv2.connectedComponents(image_crop_words, connectivity = 4)
 
     # This '-1' stands for the subtraction of the background as a label :
     print("There are ", comp_labels - 1, "words.")
 
     # Computing the mean grayscale value of the pixels inside the bounding box area of a region :
 
-    # sum_gr = my_image_int_del[y + h][x + w] + my_image_int_del[y][x] - my_image_int_del[y + h][x] - my_image_int_del[y][x + w]            # error for 3_noise
+    sum_gr = my_image_int_del[y + h][x + w] + my_image_int_del[y][x] - my_image_int_del[y + h][x] - my_image_int_del[y][x + w]            #CORRECT BUT  error for 3_noise
 
-    sum_gr = -my_image_int_del[y - h][x + w] - my_image_int_del[y][x] + my_image_int_del[y][x + w] + my_image_int_del[y - h][x]              # gets only a Runtimewarning for 3_noise
+    # sum_gr = -my_image_int_del[y - h][x + w] - my_image_int_del[y][x] + my_image_int_del[y][x + w] + my_image_int_del[y - h][x]              # ONLY WORKING for 3_noise
 
     # sum_gr = my_image_int_del[x + w][y - h] + my_image_int_del[x][y]- my_image_int_del[x + w][y] - my_image_int_del[x][y - h]               # error for 3_noise
 
@@ -213,7 +234,7 @@ for cntr in image_contours:
     print("Mean gray-level value in bounding box: ", mean_gr)
 
 #   Try keep data at a csv file :
-    data = [rule, counter, text_pxls, bound_box_pxls, comp_labels - 1, mean_gr]
+    data = [rule, counter, 0, bound_box_pxls, comp_labels - 1, mean_gr]
 
     data_list.append(data)
 
