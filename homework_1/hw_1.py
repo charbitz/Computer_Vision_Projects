@@ -174,7 +174,6 @@ for cntr in image_contours:
     print("x,y,w,h:", x, y, w, h)
 
     #   Computing the text-pixel area of a region (question 2a) :
-    text_pxls = 0
 
     # for i in range(y, y+h+1):
     #     for j in range(x, x+w+1):
