@@ -31,10 +31,18 @@ cv2.waitKey(0)
 image_to_bin = image_gr
 
 if noise == 1 :
-    # Median filtering :
+    # Median filtering with opencv :
     image_filt_cv = cv2.medianBlur(image_gr, ksize=3)
 
-    # Median filtering without using an OpenCV method :
+    cv2.namedWindow('image_filt_cv')
+    image_filt_cv_r = cv2.resize(image_filt_cv, (650, 800))
+    cv2.imshow('image_filt_cv', image_filt_cv_r)
+    cv2.waitKey(0)
+
+    image_to_bin = image_filt_cv
+    # Median filtering with opencv :
+
+    # Median filtering without using an OpenCV function :
     # Firstly we should use zero padding :
     # image_gr_pad = np.pad(image_gr, ((1, 1), (1, 1)), 'constant')
     #
@@ -48,31 +56,21 @@ if noise == 1 :
     #                         image_gr_pad[i][j-1], image_gr_pad[i][j], image_gr_pad[i][j+1],
     #                         image_gr_pad[i+1][j-1], image_gr_pad[i+1][j], image_gr_pad[i+1][j+1]]
     #         image_filt_alg[i][j] = st.median(neighborhood)
-
-    cv2.namedWindow('image_filt_cv')
-    image_filt_cv_r = cv2.resize(image_filt_cv, (650, 800))
-    cv2.imshow('image_filt_cv', image_filt_cv_r)
-    cv2.waitKey(0)
-
-    # cv2.namedWindow('image_filt_alg')
-    # image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
-    # cv2.imshow('image_filt_alg', image_filt_alg_r)
-    # cv2.waitKey(0)
     #
     # # Post processing the image to delete the zero-padded rows and columns:
     # image_filt_alg = np.delete(image_filt_alg, 0, 0)
     # image_filt_alg = np.delete(image_filt_alg, 0, 1)
     # image_filt_alg = np.delete(image_filt_alg, -1, 0)
     # image_filt_alg = np.delete(image_filt_alg, -1, 1)
-
+    #
     # cv2.namedWindow('image_filt_alg')
     # image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
     # cv2.imshow('image_filt_alg', image_filt_alg_r)
     # cv2.waitKey(0)
-
-    # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
-    image_to_bin = image_filt_cv
-    # print(image_filtered.shape)
+    #
+    # # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
+    # image_to_bin = image_filt_alg
+    # Median filtering without using an OpenCV function :
 
 # Computing the integral image of the data image :
 my_image = image_to_bin
