@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/3_original.png'
+image_path = 'dataset/1_noise.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -89,7 +89,34 @@ cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
 
 # Using some Morphological Operations in order to extract bigger regions of objects. Target is the words :
-strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,3))     # need to be bigger in order NOT to find more words
+# Dilation is applied based on the image letter to letter and word to word distances :
+if "1" in image_path:
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10,10))       # explained
+    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # explained
+    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # trial and error
+    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # trial and error
+# elif "2" in image_path:
+#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10,3))        # gonna test it with explaining
+#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
+#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
+#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+# elif "3" in image_path:
+#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10,3))        # gonna test it with explaining
+#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
+#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
+#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+# elif "4" in image_path:
+#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 3))       # gonna test it with explaining
+#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it  with explaining
+#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
+#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+# elif "5" in image_path:
+#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 3))       # gonna test it with explaining
+#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
+#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
+#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+
+# strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,3))     # need to be bigger in order NOT to find more words
 image_dil_words = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil_words)
 
 cv2.namedWindow('image_dil_words')
@@ -99,13 +126,8 @@ cv2.waitKey(0)
 
 # Using some Morphological Operations before finding the contours, in order to extract bigger regions of objects. Target is the regions of texts :
 # Starting with dilation, in order to get the text lines together as one region :
-#
-# if "3" in image_path:
-#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 45))
-# else :
-#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
 
-strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
+# strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
 image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil)
 
 cv2.namedWindow('image_dil')
@@ -114,9 +136,8 @@ cv2.imshow('image_dil', image_dil_r)
 cv2.waitKey(0)
 
 # Then we apply erosion to set apart the desirable regions :
-strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
-print("strel MORPH_RECT")
-print(strel_eros)
+
+# strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
 
 image_eros = cv2.morphologyEx(image_dil, cv2.MORPH_ERODE, strel_eros)
 
@@ -142,19 +163,6 @@ cv2.namedWindow('image_dil_y')
 image_dil_y_r = cv2.resize(image_dil_y, (650, 800))
 cv2.imshow('image_dil_y', image_dil_y_r)
 cv2.waitKey(0)
-
-# if "3" in image_path:   # MAY BE USED FOR IMAGE 3_ORIGINAL/NOISE: (CHECK WHAT)
-# #   do erosion on x axis :
-#     strel_er3_x = cv2.getStructuringElement(cv2.MORPH_RECT, (60, 2))
-#     image_er3_x = cv2.morphologyEx(image_dil_y, cv2.MORPH_ERODE, strel_er3_x)
-#
-#     cv2.namedWindow('image_er3_x')
-#     image_er3_x_r = cv2.resize(image_er3_x, (650, 800))
-#     cv2.imshow('image_er3_x', image_er3_x_r)
-#     cv2.waitKey(0)
-#
-#     # in order to have unified code
-#     image_dil_y = image_er3_x
 
 # Computing Contours:
 image_bin_contours = cv2.findContours(image=image_dil_y, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
@@ -195,6 +203,7 @@ for cntr in image_contours:
     #            text_pxls += 1
 
     # Cropping the image :
+    image_crop = []
     image_crop = image_bin[y:y+h, x:x+w].copy()
 
     # This imshow() will be helpful for the report
