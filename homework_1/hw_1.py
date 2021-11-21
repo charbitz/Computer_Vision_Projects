@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/1_noise.png'
+image_path = 'dataset/2_original.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -95,11 +95,13 @@ if "1" in image_path:
     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # explained
     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # trial and error
     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # trial and error
-# elif "2" in image_path:
-#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10,3))        # gonna test it with explaining
-#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
-#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
-#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # purpose of this is to enclose better the one line regions, trial and error
+elif "2" in image_path:
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (8,3))         # worked with less rows
+    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # worked
+    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
+    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
+    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
 # elif "3" in image_path:
 #     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10,3))        # gonna test it with explaining
 #     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
@@ -138,7 +140,6 @@ cv2.waitKey(0)
 # Then we apply erosion to set apart the desirable regions :
 
 # strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
-
 image_eros = cv2.morphologyEx(image_dil, cv2.MORPH_ERODE, strel_eros)
 
 cv2.namedWindow('image_eros')
@@ -147,7 +148,8 @@ cv2.imshow('image_eros', image_eros_r)
 cv2.waitKey(0)
 
 # Then we apply closing to produce less false regions (regions with black pixels) :
-strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))
+
+# strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))
 image_close = cv2.morphologyEx(image_eros, cv2.MORPH_CLOSE, strel_close)
 
 cv2.namedWindow('image_close')
@@ -156,7 +158,8 @@ cv2.imshow('image_close', image_close_r)
 cv2.waitKey(0)
 
 # Then we apply dilation on the y axis to get more representative measurements :
-strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
+
+# strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
 image_dil_y = cv2.morphologyEx(image_close, cv2.MORPH_DILATE, strel_dil_y)
 
 cv2.namedWindow('image_dil_y')
