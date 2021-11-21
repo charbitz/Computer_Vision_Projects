@@ -79,7 +79,6 @@ my_image_int = cv2.integral(my_image)
 # Printing the dimensions of the integral image to check:
 print("The shape of the integral image is :", my_image_int.shape)
 
-
 # Converting to a binary image with the cv2.threshold() :
 thresh_otsu, image_bin = cv2.threshold(src=image_to_bin, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
 
