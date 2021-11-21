@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/3_noise.png'
+image_path = 'dataset/5_noise.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -107,16 +107,18 @@ elif "3" in image_path:
     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
     strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # worked
-# elif "4" in image_path:
-#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 3))       # gonna test it with explaining
-#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it  with explaining
-#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
-#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
-# elif "5" in image_path:
-#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 3))       # gonna test it with explaining
-#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
-#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
-#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+elif "4" in image_path:
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 10))      # worked same sizes with image 1
+    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # worked
+    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
+    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
+    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # worked
+elif "5" in image_path:
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 10))       # gonna test it with explaining
+    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
+    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
+    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            #
 
 # strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,3))     # need to be bigger in order NOT to find more words
 image_dil_words = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil_words)
