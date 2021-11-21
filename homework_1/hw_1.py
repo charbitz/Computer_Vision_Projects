@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/2_original.png'
+image_path = 'dataset/3_noise.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -100,12 +100,13 @@ elif "2" in image_path:
     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # worked
     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
-    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
-# elif "3" in image_path:
-#     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10,3))        # gonna test it with explaining
-#     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
-#     strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
-#     strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
+    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # worked
+elif "3" in image_path:
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (14,8))        # worked with more rows
+    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # worked
+    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
+    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
+    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # worked
 # elif "4" in image_path:
 #     strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 3))       # gonna test it with explaining
 #     strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it  with explaining
