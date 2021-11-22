@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/5_noise.png'
+image_path = 'dataset/3_original.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -88,37 +88,16 @@ cv2.imshow('image_bin', image_bin_r)
 cv2.waitKey(0)
 
 # Using some Morphological Operations in order to extract bigger regions of objects. Target is the words :
-# Dilation is applied based on the image letter to letter and word to word distances :
-if "1" in image_path:
-    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10,10))       # explained
-    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # explained
-    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # trial and error
-    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # trial and error
-    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # purpose of this is to enclose better the one line regions, trial and error
-elif "2" in image_path:
-    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (8,3))         # worked with less rows
-    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # worked
-    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
-    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
-    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # worked
+# Dilation kernels for word detection for each image type :
+if "2" in image_path:
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (8,3))
+    print("GET IMAGE 2")
 elif "3" in image_path:
-    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (14,8))        # worked with more rows
-    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # worked
-    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
-    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
-    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # worked
-elif "4" in image_path:
-    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 10))      # worked same sizes with image 1
-    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # worked
-    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # worked
-    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # worked
-    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            # worked
-elif "5" in image_path:
-    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 10))       # gonna test it with explaining
-    strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))             # gonna test it with explaining
-    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))            # gonna test it
-    strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))           # gonna test it
-    strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))            #
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (14, 8))
+    print("GET IMAGE 3")
+else :
+    strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (10, 10))
+    print("GET ANOTHER IMAGE ")
 
 # strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,3))     # need to be bigger in order NOT to find more words
 image_dil_words = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil_words)
@@ -129,9 +108,10 @@ cv2.imshow('image_dil_words', image_dil_words_r)
 cv2.waitKey(0)
 
 # Using some Morphological Operations before finding the contours, in order to extract bigger regions of objects. Target is the regions of texts :
-# Starting with dilation, in order to get the text lines together as one region :
 
-# strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
+# Dilation :
+
+strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
 image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil)
 
 cv2.namedWindow('image_dil')
@@ -139,9 +119,9 @@ image_dil_r = cv2.resize(image_dil, (650, 800))
 cv2.imshow('image_dil', image_dil_r)
 cv2.waitKey(0)
 
-# Then we apply erosion to set apart the desirable regions :
+# Erosion :
 
-# strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
+strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
 image_eros = cv2.morphologyEx(image_dil, cv2.MORPH_ERODE, strel_eros)
 
 cv2.namedWindow('image_eros')
@@ -149,9 +129,9 @@ image_eros_r = cv2.resize(image_eros, (650, 800))
 cv2.imshow('image_eros', image_eros_r)
 cv2.waitKey(0)
 
-# Then we apply closing to produce less false regions (regions with black pixels) :
+# Closing :
 
-# strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))
+strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))
 image_close = cv2.morphologyEx(image_eros, cv2.MORPH_CLOSE, strel_close)
 
 cv2.namedWindow('image_close')
@@ -159,9 +139,9 @@ image_close_r = cv2.resize(image_close, (650, 800))
 cv2.imshow('image_close', image_close_r)
 cv2.waitKey(0)
 
-# Then we apply dilation on the y axis to get more representative measurements :
+# Dilation on the y axis :
 
-# strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
+strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
 image_dil_y = cv2.morphologyEx(image_close, cv2.MORPH_DILATE, strel_dil_y)
 
 cv2.namedWindow('image_dil_y')
@@ -216,9 +196,6 @@ for cntr in image_contours:
     cv2.imshow('image_crop_'+str(counter), image_crop)
     cv2.waitKey(0)
 
-    # text_pxls = 0
-    # text_pxls = np.sum(image_crop == 255)
-
     print("---- Region ", counter, ": ----")
     print("Area (px): ", np.sum(image_crop == 255))
 
@@ -229,7 +206,7 @@ for cntr in image_contours:
 
     # Computing the number of words in a region :
     # We'll use the cv2.connectedComponents() :
-    # Cropping the image :                              # THIS IS A SAVΙOR
+    # Cropping the image :
     image_crop_words = image_dil_words[y:y + h, x:x + w].copy()
 
     # This imshow() will be helpful for the report :
@@ -244,14 +221,10 @@ for cntr in image_contours:
 
     # Computing the mean grayscale value of the pixels inside the bounding box area of a region :
 
-    sum_gr = my_image_int[y + h][x + w] + my_image_int[y][x] - my_image_int[y + h][x] - my_image_int[y][x + w]            #CORRECT for all if i use my_image_int (integral image without deleting the extra row and col)
-
-    # sum_gr = -my_image_int_del[y - h][x + w] - my_image_int_del[y][x] + my_image_int_del[y][x + w] + my_image_int_del[y - h][x]              # ONLY WORKING for 3_noise
-
-    # sum_gr = my_image_int_del[x + w][y - h] + my_image_int_del[x][y]- my_image_int_del[x + w][y] - my_image_int_del[x][y - h]               # error for 3_noise
-
+    sum_gr = my_image_int[y + h][x + w] + my_image_int[y][x] - my_image_int[y + h][x] - my_image_int[y][x + w]
 
     mean_gr = sum_gr / bound_box_pxls
+
     print("Mean gray-level value in bounding box: ", mean_gr)
 
 #   Try keep data at a csv file :
@@ -276,43 +249,3 @@ cv2.waitKey(0)
 # Saving the image with the text regions bounding boxes :
 write_path = "results/" + image_path[8:-4] + "_res.png"
 cv2.imwrite(write_path, image_to_write)
-
-
-
-
-
-
-# Boundary extraction of binary image :                                                                 # NOT SURE IF THAT WILL HELP !!!
-kernel = np.ones((3,3), np.uint8)
-image_bin_bounds = cv2.morphologyEx(image_bin, cv2.MORPH_GRADIENT, kernel)
-
-cv2.namedWindow('image_bin_bounds')
-image_bin_bounds_r = cv2.resize(image_bin_bounds, (650, 800))
-cv2.imshow('image_bin_bounds', image_bin_bounds_r)
-cv2.waitKey(0)
-
-
-
-
-
-
-
-# Taking the connected components of the binary image. It'll be helpful later :
-
-image_con_comp_labels, image_bin_con_comp = cv2.connectedComponents(image_bin)
-
-cv2.namedWindow('image_bin_con_comp')
-image_bin_con_comp_r = cv2.resize(image_bin_con_comp.astype('uint8'), (650, 800))                   # worked with " .astype('uint8') " (THIS DETAIL IS ONLY FOR RESIZING)
-cv2.imshow('image_bin_con_comp', image_bin_con_comp_r)
-cv2.waitKey(0)
-
-print("The number of labels found is :",image_con_comp_labels)
-
-# Normalizing the pixel values of the image with the connected components :                             # NOT SURE IF THAT WILL HELP !!!
-
-image_con_comp_norm = cv2.normalize(image_bin_con_comp, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-
-cv2.namedWindow('or_1_con_comp')
-image_con_comp_norm_r = cv2.resize(image_con_comp_norm.astype('uint8'), (650, 800))                     # worked with " .astype('uint8') " (THIS DETAIL IS ONLY FOR RESIZING)
-cv2.imshow('or_1_con_comp', image_con_comp_norm_r)
-cv2.waitKey(0)
