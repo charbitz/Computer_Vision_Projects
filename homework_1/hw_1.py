@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import statistics as st
 import csv
 
-image_path = 'dataset/3_original.png'
+image_path = 'dataset/5_noise.png'
 
 noise = 1 if "noise" in image_path else 0
 
@@ -163,9 +163,9 @@ image_contours.reverse()
 counter = 0
 
 # Try keep data at a csv file :
-rule = "dil-er-clos-dil_y_axis-connectivity_4"  # UPDATE WHEN CHANGING !!!
+rule = "if_else_line_152---median_cv2"  # UPDATE WHEN CHANGING !!!
 
-header = ['rule', 'region', 'pxl_area', 'bb_area', 'words', 'mean_gr_val']
+header = ['filename', 'rule', 'region', 'pxl_area', 'bb_area', 'words', 'mean_gr_val']
 
 data_list = []
 
@@ -181,11 +181,6 @@ for cntr in image_contours:
     print("x,y,w,h:", x, y, w, h)
 
     #   Computing the text-pixel area of a region (question 2a) :
-
-    # for i in range(y, y+h+1):
-    #     for j in range(x, x+w+1):
-    #         if (image_bin[i][j] == 255):
-    #            text_pxls += 1
 
     # Cropping the image :
     image_crop = []
@@ -228,18 +223,19 @@ for cntr in image_contours:
     print("Mean gray-level value in bounding box: ", mean_gr)
 
 #   Try keep data at a csv file :
-    data = [rule, counter, 0, bound_box_pxls, comp_labels - 1, mean_gr]
+    filename = image_path[8:-4]
+    data = [filename, rule, counter, 0, bound_box_pxls, comp_labels - 1, mean_gr]
 
     data_list.append(data)
 
-# with open('measurements.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
-#     writer = csv.writer(f)
-#
-#     # write the header
-#     # writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
-#
-#     # write multiple rows
-#     writer.writerows(data_list)
+with open('results/measurements.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
+    writer = csv.writer(f)
+
+    # write the header
+    # writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
+
+    # write multiple rows
+    writer.writerows(data_list)
 
 cv2.namedWindow('image_to_write')
 image_to_write_r = cv2.resize(image_to_write, (650, 800))
