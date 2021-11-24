@@ -15,17 +15,17 @@ image = cv2.imread(image_path)
 
 print("The shape of the input image is:", image.shape)
 
-cv2.namedWindow('image')
-image_r = cv2.resize(image, (650, 800))
-cv2.imshow('image', image_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image')
+# image_r = cv2.resize(image, (650, 800))
+# cv2.imshow('image', image_r)
+# cv2.waitKey(0)
 
 image_gr = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
-cv2.namedWindow('image_gr')
-image_gr_r = cv2.resize(image_gr, (650, 800))
-cv2.imshow('image_gr', image_gr_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image_gr')
+# image_gr_r = cv2.resize(image_gr, (650, 800))
+# cv2.imshow('image_gr', image_gr_r)
+# cv2.waitKey(0)
 
 # This is the image, in which for "original" data images (noise = 0), we are going to implement thresholding :
 image_to_bin = image_gr
@@ -34,42 +34,42 @@ if noise == 1 :
     # Median filtering with opencv :
     image_filt_cv = cv2.medianBlur(image_gr, ksize=3)
 
-    cv2.namedWindow('image_filt_cv')
-    image_filt_cv_r = cv2.resize(image_filt_cv, (650, 800))
-    cv2.imshow('image_filt_cv', image_filt_cv_r)
-    cv2.waitKey(0)
+    # cv2.namedWindow('image_filt_cv')
+    # image_filt_cv_r = cv2.resize(image_filt_cv, (650, 800))
+    # cv2.imshow('image_filt_cv', image_filt_cv_r)
+    # cv2.waitKey(0)
 
-    image_to_bin = image_filt_cv
+    # image_to_bin = image_filt_cv
     # Median filtering with opencv :
 
     # Median filtering without using an OpenCV function :
     # Firstly we should use zero padding :
-    # image_gr_pad = np.pad(image_gr, ((1, 1), (1, 1)), 'constant')
-    #
-    # print("The shape of the input image in grayscale with zero padding is:", image_gr_pad.shape)
-    #
-    # image_filt_alg = image_gr_pad.copy()
-    #
-    # for i in range(1, image_gr_pad.shape[0] - 1):
-    #     for j in range(1, image_gr_pad.shape[1] - 1):
-    #         neighborhood = [image_gr_pad[i-1][j-1], image_gr_pad[i-1][j], image_gr_pad[i-1][j+1],
-    #                         image_gr_pad[i][j-1], image_gr_pad[i][j], image_gr_pad[i][j+1],
-    #                         image_gr_pad[i+1][j-1], image_gr_pad[i+1][j], image_gr_pad[i+1][j+1]]
-    #         image_filt_alg[i][j] = st.median(neighborhood)
-    #
-    # # Post processing the image to delete the zero-padded rows and columns:
-    # image_filt_alg = np.delete(image_filt_alg, 0, 0)
-    # image_filt_alg = np.delete(image_filt_alg, 0, 1)
-    # image_filt_alg = np.delete(image_filt_alg, -1, 0)
-    # image_filt_alg = np.delete(image_filt_alg, -1, 1)
-    #
+    image_gr_pad = np.pad(image_gr, ((1, 1), (1, 1)), 'constant')
+
+    print("The shape of the input image in grayscale with zero padding is:", image_gr_pad.shape)
+
+    image_filt_alg = image_gr_pad.copy()
+
+    for i in range(1, image_gr_pad.shape[0] - 1):
+        for j in range(1, image_gr_pad.shape[1] - 1):
+            neighborhood = [image_gr_pad[i-1][j-1], image_gr_pad[i-1][j], image_gr_pad[i-1][j+1],
+                            image_gr_pad[i][j-1], image_gr_pad[i][j], image_gr_pad[i][j+1],
+                            image_gr_pad[i+1][j-1], image_gr_pad[i+1][j], image_gr_pad[i+1][j+1]]
+            image_filt_alg[i][j] = st.median(neighborhood)
+
+    # Post processing the image to delete the zero-padded rows and columns:
+    image_filt_alg = np.delete(image_filt_alg, 0, 0)
+    image_filt_alg = np.delete(image_filt_alg, 0, 1)
+    image_filt_alg = np.delete(image_filt_alg, -1, 0)
+    image_filt_alg = np.delete(image_filt_alg, -1, 1)
+
     # cv2.namedWindow('image_filt_alg')
     # image_filt_alg_r = cv2.resize(image_filt_alg, (650, 800))
     # cv2.imshow('image_filt_alg', image_filt_alg_r)
     # cv2.waitKey(0)
-    #
-    # # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
-    # image_to_bin = image_filt_alg
+
+    # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
+    image_to_bin = image_filt_alg
     # Median filtering without using an OpenCV function :
 
 # Computing the integral image of the data image :
@@ -82,10 +82,10 @@ print("The shape of the integral image is :", my_image_int.shape)
 # Converting to a binary image with the cv2.threshold() :
 thresh_otsu, image_bin = cv2.threshold(src=image_to_bin, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
 
-cv2.namedWindow('image_bin')
-image_bin_r = cv2.resize(image_bin, (650, 800))
-cv2.imshow('image_bin', image_bin_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image_bin')
+# image_bin_r = cv2.resize(image_bin, (650, 800))
+# cv2.imshow('image_bin', image_bin_r)
+# cv2.waitKey(0)
 
 # Using some Morphological Operations in order to extract bigger regions of objects. Target is the words :
 # Dilation kernels for word detection for each image type :
@@ -102,10 +102,10 @@ else :
 # strel_dil_words = cv2.getStructuringElement(cv2.MORPH_RECT, (10,3))     # need to be bigger in order NOT to find more words
 image_dil_words = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil_words)
 
-cv2.namedWindow('image_dil_words')
-image_dil_words_r = cv2.resize(image_dil_words, (650, 800))
-cv2.imshow('image_dil_words', image_dil_words_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image_dil_words')
+# image_dil_words_r = cv2.resize(image_dil_words, (650, 800))
+# cv2.imshow('image_dil_words', image_dil_words_r)
+# cv2.waitKey(0)
 
 # Using some Morphological Operations before finding the contours, in order to extract bigger regions of objects. Target is the regions of texts :
 
@@ -114,40 +114,40 @@ cv2.waitKey(0)
 strel_dil = cv2.getStructuringElement(cv2.MORPH_RECT, (45, 45))
 image_dil = cv2.morphologyEx(image_bin, cv2.MORPH_DILATE, strel_dil)
 
-cv2.namedWindow('image_dil')
-image_dil_r = cv2.resize(image_dil, (650, 800))
-cv2.imshow('image_dil', image_dil_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image_dil')
+# image_dil_r = cv2.resize(image_dil, (650, 800))
+# cv2.imshow('image_dil', image_dil_r)
+# cv2.waitKey(0)
 
 # Erosion :
 
 strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
 image_eros = cv2.morphologyEx(image_dil, cv2.MORPH_ERODE, strel_eros)
 
-cv2.namedWindow('image_eros')
-image_eros_r = cv2.resize(image_eros, (650, 800))
-cv2.imshow('image_eros', image_eros_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image_eros')
+# image_eros_r = cv2.resize(image_eros, (650, 800))
+# cv2.imshow('image_eros', image_eros_r)
+# cv2.waitKey(0)
 
 # Closing :
 
 strel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 60))
 image_close = cv2.morphologyEx(image_eros, cv2.MORPH_CLOSE, strel_close)
 
-cv2.namedWindow('image_close')
-image_close_r = cv2.resize(image_close, (650, 800))
-cv2.imshow('image_close', image_close_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image_close')
+# image_close_r = cv2.resize(image_close, (650, 800))
+# cv2.imshow('image_close', image_close_r)
+# cv2.waitKey(0)
 
 # Dilation on the y axis :
 
 strel_dil_y = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 20))
 image_dil_y = cv2.morphologyEx(image_close, cv2.MORPH_DILATE, strel_dil_y)
 
-cv2.namedWindow('image_dil_y')
-image_dil_y_r = cv2.resize(image_dil_y, (650, 800))
-cv2.imshow('image_dil_y', image_dil_y_r)
-cv2.waitKey(0)
+# cv2.namedWindow('image_dil_y')
+# image_dil_y_r = cv2.resize(image_dil_y, (650, 800))
+# cv2.imshow('image_dil_y', image_dil_y_r)
+# cv2.waitKey(0)
 
 # Computing Contours:
 image_bin_contours = cv2.findContours(image=image_dil_y, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_SIMPLE)
@@ -155,7 +155,7 @@ image_bin_contours = cv2.findContours(image=image_dil_y, mode=cv2.RETR_TREE, met
 # Making a copy of the initial image:
 image_to_write = image.copy()
 
-image_contours = image_bin_contours[0] if len(image_bin_contours) == 2 else image_bin_contours[1]         # THIS MAY BE SIMPLE AS : image_contours = image_bin_contours[1]
+image_contours = image_bin_contours[1]         # THIS MAY BE SIMPLE AS : image_contours = image_bin_contours[1]
 
 # This is done for the right visual requirements:
 image_contours.reverse()
@@ -163,7 +163,7 @@ image_contours.reverse()
 counter = 0
 
 # Try keep data at a csv file :
-rule = "if_else_line_152---median_cv2"  # UPDATE WHEN CHANGING !!!
+rule = "line_152---median_algo"  # UPDATE WHEN CHANGING !!!
 
 header = ['filename', 'rule', 'region', 'pxl_area', 'bb_area', 'words', 'mean_gr_val']
 
@@ -187,9 +187,9 @@ for cntr in image_contours:
     image_crop = image_bin[y:y+h, x:x+w].copy()
 
     # This imshow() will be helpful for the report
-    cv2.namedWindow('image_crop_'+str(counter))
-    cv2.imshow('image_crop_'+str(counter), image_crop)
-    cv2.waitKey(0)
+    # cv2.namedWindow('image_crop_'+str(counter))
+    # cv2.imshow('image_crop_'+str(counter), image_crop)
+    # cv2.waitKey(0)
 
     print("---- Region ", counter, ": ----")
     print("Area (px): ", np.sum(image_crop == 255))
@@ -205,9 +205,9 @@ for cntr in image_contours:
     image_crop_words = image_dil_words[y:y + h, x:x + w].copy()
 
     # This imshow() will be helpful for the report :
-    cv2.namedWindow('image_crop_words_' + str(counter))
-    cv2.imshow('image_crop_words_' + str(counter), image_crop_words)
-    cv2.waitKey(0)
+    # cv2.namedWindow('image_crop_words_' + str(counter))
+    # cv2.imshow('image_crop_words_' + str(counter), image_crop_words)
+    # cv2.waitKey(0)
 
     comp_labels, image_con_comp = cv2.connectedComponents(image_crop_words, connectivity = 4)
 
@@ -228,14 +228,14 @@ for cntr in image_contours:
 
     data_list.append(data)
 
-with open('results/measurements.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
-    writer = csv.writer(f)
-
-    # write the header
-    # writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
-
-    # write multiple rows
-    writer.writerows(data_list)
+# with open('results/measurements.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
+#     writer = csv.writer(f)
+#
+#     # write the header
+#     # writer.writerow(header)                                                       # uncommented for first time writing to the csv file, commented for editing the csv file
+#
+#     # write multiple rows
+#     writer.writerows(data_list)
 
 cv2.namedWindow('image_to_write')
 image_to_write_r = cv2.resize(image_to_write, (650, 800))
@@ -243,5 +243,5 @@ cv2.imshow('image_to_write', image_to_write_r)
 cv2.waitKey(0)
 
 # Saving the image with the text regions bounding boxes :
-write_path = "results/" + image_path[8:-4] + "_res.png"
-cv2.imwrite(write_path, image_to_write)
+# write_path = "results/res_median_alg/" + image_path[8:-4] + "_res.png"
+# cv2.imwrite(write_path, image_to_write)
