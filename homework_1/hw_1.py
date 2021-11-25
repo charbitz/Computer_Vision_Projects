@@ -12,7 +12,7 @@ images = ['dataset/1_original.png', 'dataset/1_noise.png',
 
 for image_path in images:
     noise = 1 if "noise" in image_path else 0
-    print("Output for "+ image_path[8:-4] + ".png :")
+    print("Output for "+ image_path[8:-4] + ".png :")           # This print is to help checking the results
 
     image = cv2.imread(image_path)
 
@@ -64,7 +64,7 @@ for image_path in images:
     my_image_int = cv2.integral(image_gr)
 
     # Converting to a binary image with the cv2.threshold() :
-    thresh_otsu, image_bin = cv2.threshold(src=image_to_bin, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)         #  first tests of OTSU METHOD
+    thresh_otsu, image_bin = cv2.threshold(src=image_to_bin, thresh=0, maxval=255, type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
     # cv2.namedWindow('image_bin')
     # image_bin_r = cv2.resize(image_bin, (650, 800))
@@ -135,9 +135,9 @@ for image_path in images:
     # Making a copy of the initial image:
     image_to_write = image.copy()
 
-    image_contours = image_bin_contours[1]         # THIS MAY BE SIMPLE AS : image_contours = image_bin_contours[1]
+    image_contours = image_bin_contours[1]         # Here is all the information needed
 
-    # This is done for the right visual requirements:
+    # This is done for right visual requirements:
     image_contours.reverse()
 
     counter = 0
