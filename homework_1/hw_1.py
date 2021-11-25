@@ -82,7 +82,7 @@ for image_path in images:
     # cv2.imshow('image_bin', image_bin_r)
     # cv2.waitKey(0)
 
-    # Using some Morphological Operations in order to extract bigger regions of objects. Target is the words :
+    # Using some Morphological Operations in order to extract the words :
     # Dilation kernels for word detection for each image type :
     if "2" in image_path:
         strel_dil_words = cv2.getStructuringElement(cv2.MORPH_CROSS, (8,3))
@@ -98,7 +98,7 @@ for image_path in images:
     # cv2.imshow('image_dil_words', image_dil_words_r)
     # cv2.waitKey(0)
 
-    # Using some Morphological Operations before finding the contours, in order to extract bigger regions of objects. Target is the regions of texts :
+    # Using some Morphological Operations before finding the contours, in order to extract the regions of texts :
 
     # Dilation :
 
@@ -112,7 +112,7 @@ for image_path in images:
 
     # Erosion :
 
-    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))                                          # we need a rectangular kernel in order not to deform the desirable for detection regions
+    strel_eros = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 50))
     image_eros = cv2.morphologyEx(image_dil, cv2.MORPH_ERODE, strel_eros)
 
     # cv2.namedWindow('image_eros')
@@ -175,7 +175,7 @@ for image_path in images:
         # cv2.imshow('image_crop_'+str(counter), image_crop)
         # cv2.waitKey(0)
 
-        #   Computing the text-pixel area of a region :
+        # Computing the text-pixel area of a region :
         text_area = np.sum(image_crop == 255)
 
         print("---- Region", counter, ": ----")
@@ -186,7 +186,7 @@ for image_path in images:
 
         print("Bounding Box Area(px):", bound_box_pxls)
 
-        # Computing the number of words in a region, by using cv2.connectedComponents() :
+        # Computing the number of words in the region, by using cv2.connectedComponents() :
 
         # Cropping the image :
         image_crop_words = image_dil_words[y:y + h, x:x + w].copy()
@@ -214,6 +214,8 @@ for image_path in images:
 
         data_list.append(data)
 
+    # Saving the output measurements to a csv file :
+
     # with open('results/measurements3.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
     #     writer = csv.writer(f)
     #
@@ -229,6 +231,7 @@ for image_path in images:
     cv2.waitKey(0)
 
     # Saving the images with the text regions bounding boxes :
+
     # write_path = "results/res_median_alg_all_toge/" + image_path[8:-4] + "_res.png"
     # cv2.imwrite(write_path, image_to_write)
 
