@@ -32,18 +32,8 @@ for image_path in images:
     image_to_bin = image_gr
 
     if noise == 1 :
-        # Median filtering with opencv- - - - - - - - - - - - - -:
-        # image_filt_cv = cv2.medianBlur(image_gr, ksize=3)
-        # image_to_bin = image_filt_cv
-        # image_to_bin = image_filt_cv
+        # Median filtering without using an OpenCV function :
 
-        # cv2.namedWindow('image_filt_cv')
-        # image_filt_cv_r = cv2.resize(image_filt_cv, (650, 800))
-        # cv2.imshow('image_filt_cv', image_filt_cv_r)
-        # cv2.waitKey(0)
-        # Median filtering with opencv- - - - - - - - - - - - - -:
-
-        # Median filtering without using an OpenCV function- - - - - - - - - - - - - -:
         # Firstly we should use zero padding :
         image_gr_pad = np.pad(image_gr, ((1, 1), (1, 1)), 'constant')
 
@@ -69,7 +59,6 @@ for image_path in images:
 
         # This is the image, in which for "noise" data images (noise = 1), we are going to implement thresholding :
         image_to_bin = image_filt_alg
-        # Median filtering without using an OpenCV function- - - - - - - - - - - - - -:
 
     # Computing the integral image of the grayscale data image :
     my_image_int = cv2.integral(image_gr)
@@ -153,12 +142,6 @@ for image_path in images:
 
     counter = 0
 
-    # Header for the csv file, to keep the output measurements :
-
-    header = ['filename', 'region', 'pxl_area', 'bb_area', 'words', 'mean_gr_val']
-
-    data_list = []
-
     # Computing the cv2.boundingRect() and cv2.rectangle() :
     for cntr in image_contours:
         counter += 1
@@ -208,23 +191,6 @@ for image_path in images:
 
         print("Mean gray-level value in bounding box:", mean_gr)
 
-    #   Keeping data at a csv file :
-        filename = image_path[8:-4]
-        data = [filename, counter, text_area, bound_box_pxls, comp_labels - 1, mean_gr]
-
-        data_list.append(data)
-
-    # Saving the output measurements to a csv file :
-
-    # with open('results/measurements3.csv', 'a', encoding='UTF8', newline='') as f:               # 'w' for first time writing to the csv file, 'a' for editing the csv file
-    #     writer = csv.writer(f)
-    #
-    #     # write the header
-    #     # writer.writerow(header)                                                                # uncommented for first time writing to the csv file, commented for editing the csv file
-    #
-    #     # write multiple rows
-    #     writer.writerows(data_list)
-
     cv2.namedWindow('image_to_write for '+ image_path[8:-4])
     image_to_write_r = cv2.resize(image_to_write, (650, 800))
     cv2.imshow('image_to_write for '+ image_path[8:-4], image_to_write_r)
@@ -232,7 +198,7 @@ for image_path in images:
 
     # Saving the images with the text regions bounding boxes :
 
-    # write_path = "results/res_median_alg_all_toge/" + image_path[8:-4] + "_res.png"
+    # write_path = "results/" + image_path[8:-4] + "_res.png"
     # cv2.imwrite(write_path, image_to_write)
 
     cv2.destroyAllWindows()
