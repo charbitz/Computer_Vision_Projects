@@ -178,13 +178,13 @@ for image_path in images:
         #   Computing the text-pixel area of a region :
         text_area = np.sum(image_crop == 255)
 
-        print("---- Region ", counter, ": ----")
-        print("Area (px): ", text_area)
+        print("---- Region", counter, ": ----")
+        print("Area(px):", text_area)
 
         # Computing the bounding box-pixel area of a region :
         bound_box_pxls = w*h
 
-        print("Bounding Box Area(px): ", bound_box_pxls)
+        print("Bounding Box Area(px):", bound_box_pxls)
 
         # Computing the number of words in a region, by using cv2.connectedComponents() :
 
@@ -198,7 +198,7 @@ for image_path in images:
         comp_labels, image_con_comp = cv2.connectedComponents(image_crop_words, connectivity = 4)
 
         # This '-1' stands for the subtraction of the background as a label :
-        print("There are ", comp_labels - 1, "words.")
+        print("Number of words:", comp_labels - 1)
 
         # Computing the mean grayscale value of the pixels inside the bounding box area of a region :
 
@@ -206,7 +206,7 @@ for image_path in images:
 
         mean_gr = sum_gr / bound_box_pxls
 
-        print("Mean gray-level value in bounding box: ", mean_gr)
+        print("Mean gray-level value in bounding box:", mean_gr)
 
     #   Keeping data at a csv file :
         filename = image_path[8:-4]
@@ -231,7 +231,5 @@ for image_path in images:
     # Saving the images with the text regions bounding boxes :
     # write_path = "results/res_median_alg_all_toge/" + image_path[8:-4] + "_res.png"
     # cv2.imwrite(write_path, image_to_write)
-
-    print()
 
     cv2.destroyAllWindows()
