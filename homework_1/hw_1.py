@@ -200,7 +200,7 @@ for image_path in images:
 
     # Saving the images with the text regions bounding boxes :
 
-    # write_path = "results/" + image_path[8:-4] + "_res.png"
-    # cv2.imwrite(write_path, image_to_write)
+    write_path = "results/" + image_path[8:-4] + "_res.png"
+    cv2.imwrite(write_path, image_to_write)
 
     cv2.destroyAllWindows()
