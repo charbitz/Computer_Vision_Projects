@@ -12,7 +12,9 @@ images = ['dataset/1_original.png', 'dataset/1_noise.png',
 
 for image_path in images:
     noise = 1 if "noise" in image_path else 0
-    print("Output for "+ image_path[8:-4] + ".png :")           # This print is to help checking the results
+
+    # This print() helps checking the results :
+    print("Output for "+ image_path[8:-4] + ".png :")
 
     image = cv2.imread(image_path)
 
