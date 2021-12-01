@@ -3,7 +3,7 @@ import cv2
 
 # image :
 # image_path = "notre-dame-1.jpg"
-image_path = 'dataset/yard-house/yard-house-04.png'
+image_path = 'dataset/yard-house/yard-house-05.png'
 # image_path = 'dataset/my-images/png/image_1.png'
 image = cv2.imread(image_path)
 
@@ -32,7 +32,7 @@ desc1 = sift.compute(image, kp1)         # desc1[1]: grammes keiypoints , sthles
 # cv2.waitKey(0)
 
 # image_2 :
-image_path2 = 'dataset/yard-house/yard-house-03.png'
+image_path2 = 'dataset/yard-house/yard-house-04.png'
 # image_path2 = "notre-dame-2.jpg"
 image_2 = cv2.imread(image_path2)
 
