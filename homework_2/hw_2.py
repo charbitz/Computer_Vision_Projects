@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-def panorama(image_1, image_2):
+def panorama(image_2, image_1):
 
     # sift for images :
     sift = cv2.xfeatures2d_SIFT.create(3000)
@@ -19,7 +19,7 @@ def panorama(image_1, image_2):
 
     image_w_matches = cv2.drawMatches(image_1, desc1[0], image_2, desc2[0], matches, None)
     cv2.namedWindow('image_w_matches')
-    image_w_matches_r = cv2.resize(image_w_matches, (1300, 800))
+    image_w_matches_r = cv2.resize(image_w_matches,  (800, 650))
     cv2.imshow('image_w_matches', image_w_matches_r)
     cv2.waitKey(0)
     cv2.destroyWindow('image_w_matches')
@@ -43,20 +43,15 @@ def panorama(image_1, image_2):
     merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
 
     cv2.namedWindow('merged_image')
-    merged_image_r = cv2.resize(merged_image, (1300, 800))
+    merged_image_r = cv2.resize(merged_image,  (800, 650))
     cv2.imshow('merged_image', merged_image_r)
     cv2.waitKey(0)
     cv2.destroyWindow('merged_image')
 
     merged_image[0: image_1.shape[0], 0: image_1.shape[1]] = image_1
 
-    # for i in image_1.shape[0]:
-    #     for j in image_1.shape[1]:
-    #         if image_1[i][j] != 0:
-    #             merged_image[i][j] = image_1[i][j]
-
     cv2.namedWindow('merged_image_2')
-    merged_image_r = cv2.resize(merged_image, (1300, 800))
+    merged_image_r = cv2.resize(merged_image,  (800, 650))
     cv2.imshow('merged_image_2', merged_image_r)
     cv2.waitKey(0)
     cv2.destroyWindow('merged_image_2')
@@ -91,13 +86,13 @@ def cropping(image):
 
     image_gr = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
     # cv2.namedWindow('image_gr')
-    # image_gr_r = cv2.resize(image_gr, (1300, 800))
+    # image_gr_r = cv2.resize(image_gr, (800, 650))
     # cv2.imshow('image_gr', image_gr_r)
     # cv2.waitKey(0)
 
     thresh, image_bin = cv2.threshold(src=image_gr, thresh=0, maxval=255, type=cv2.THRESH_BINARY)
     # cv2.namedWindow('image_bin')
-    # image_bin_r = cv2.resize(image_bin, (1300, 800))
+    # image_bin_r = cv2.resize(image_bin,  (800, 650))
     # cv2.imshow('image_bin', image_bin_r)
     # cv2.waitKey(0)
 
@@ -109,39 +104,39 @@ def cropping(image):
     crop = final_image[y:y + h, x:x + w]
 
     cv2.namedWindow('crop')
-    crop_r = cv2.resize(crop, (1300, 800))
+    crop_r = cv2.resize(crop,  (800, 650))
     cv2.imshow('crop', crop_r)
     cv2.waitKey(0)
 
     return crop
 
 
-first_path = 'dataset/yard-house/yard-house-05.png'
+first_path = 'dataset/yard-house/yard-house-01.png'
 first_image = cv2.imread(first_path)
 first_element = first_image
 
-images = ['dataset/yard-house/yard-house-04.png', 'dataset/yard-house/yard-house-03.png',
-          'dataset/yard-house/yard-house-02.png','dataset/yard-house/yard-house-01.png']
+images = ['dataset/yard-house/yard-house-02.png', 'dataset/yard-house/yard-house-03.png',
+          'dataset/yard-house/yard-house-04.png','dataset/yard-house/yard-house-05.png']
 
 for image_path in images:
     image = cv2.imread(image_path)
 
     cv2.namedWindow('image for ' + image_path[8:-4])
-    image_r = cv2.resize(image, (1300, 800))
+    image_r = cv2.resize(image,  (800, 650))
     cv2.imshow('image for ' + image_path[8:-4], image_r)
     cv2.waitKey(0)
 
     final_image = panorama(first_element, image)
 
     cv2.namedWindow('final_image for ' + image_path[8:-4])
-    final_image_r = cv2.resize(final_image, (1300, 800))
+    final_image_r = cv2.resize(final_image, (800, 650))
     cv2.imshow('final_image for ' + image_path[8:-4], final_image_r)
     cv2.waitKey(0)
 
     image_cropped = cropping(final_image)
 
     cv2.namedWindow('image_cropped for ' + image_path[8:-4])
-    image_cropped_r = cv2.resize(image_cropped, (1300, 800))
+    image_cropped_r = cv2.resize(image_cropped,  (800, 650))
     cv2.imshow('image_cropped for ' + image_path[8:-4], image_cropped_r)
     cv2.waitKey(0)
 
