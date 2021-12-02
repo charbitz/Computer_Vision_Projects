@@ -4,7 +4,7 @@ import cv2
 def panorama(image_2, image_1):
 
     # sift for images :
-    sift = cv2.xfeatures2d_SIFT.create(3000)
+    sift = cv2.xfeatures2d_SIFT.create(2000)
 
     # sift keypoints and descriptors of image :
     kp1 = sift.detect(image_1)
@@ -18,11 +18,11 @@ def panorama(image_2, image_1):
     matches = matching(desc1[1], desc2[1])
 
     image_w_matches = cv2.drawMatches(image_1, desc1[0], image_2, desc2[0], matches, None)
-    cv2.namedWindow('image_w_matches')
+    cv2.namedWindow('image_w_matches for ' + image_path[8:-4])
     image_w_matches_r = cv2.resize(image_w_matches,  (800, 650))
-    cv2.imshow('image_w_matches', image_w_matches_r)
+    cv2.imshow('image_w_matches for ' + image_path[8:-4], image_w_matches_r)
     cv2.waitKey(0)
-    cv2.destroyWindow('image_w_matches')
+    # cv2.destroyWindow('image_w_matches')
 
     # implementation for matches_2 :
     img_pt1 = []
@@ -42,19 +42,19 @@ def panorama(image_2, image_1):
     merged_image = []
     merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
 
-    cv2.namedWindow('merged_image')
+    cv2.namedWindow('merged_image for ' + image_path[8:-4])
     merged_image_r = cv2.resize(merged_image,  (800, 650))
-    cv2.imshow('merged_image', merged_image_r)
+    cv2.imshow('merged_image for ' + image_path[8:-4], merged_image_r)
     cv2.waitKey(0)
-    cv2.destroyWindow('merged_image')
+    # cv2.destroyWindow('merged_image')
 
     merged_image[0: image_1.shape[0], 0: image_1.shape[1]] = image_1
 
-    cv2.namedWindow('merged_image_2')
+    cv2.namedWindow('merged_image_2 for ' + image_path[8:-4])
     merged_image_r = cv2.resize(merged_image,  (800, 650))
-    cv2.imshow('merged_image_2', merged_image_r)
+    cv2.imshow('merged_image_2 for ' + image_path[8:-4], merged_image_r)
     cv2.waitKey(0)
-    cv2.destroyWindow('merged_image_2')
+    # cv2.destroyWindow('merged_image_2')
 
     return merged_image
 
@@ -81,39 +81,47 @@ def matching(d1, d2):
             matches_1.append(cv2.DMatch(i, min_dist_pos_1, min_dist_1))
 
     matches_2 = []
-    for i in range(n2):
-        row_d2 = d2[i, :]
-        diff = d1 - row_d2
-        diff = np.abs(diff)
-        distances = np.sum(diff, axis=1)
+    for j in range(n2):
+        row_d2 = d2[j, :]
+        diff2 = d1 - row_d2
+        diff2 = np.abs(diff2)
+        distances2 = np.sum(diff2, axis=1)
 
-        min_dist_pos_2 = np.argmin(distances)
-        min_dist_2 = distances[min_dist_pos_2]
+        min_dist_pos_2 = np.argmin(distances2)
+        min_dist_2 = distances2[min_dist_pos_2]
 
-        distances[min_dist_pos_2] = np.inf
+        distances2[min_dist_pos_2] = np.inf
 
-        sec_min_dist_pos_2 = np.argmin(distances)
-        sec_min_dist_2 = distances[sec_min_dist_pos_2]
+        sec_min_dist_pos_2 = np.argmin(distances2)
+        sec_min_dist_2 = distances2[sec_min_dist_pos_2]
 
         if min_dist_2 / sec_min_dist_2 < 0.5:
-            matches_2.append(cv2.DMatch(i, min_dist_pos_2, min_dist_2))
+            matches_2.append(cv2.DMatch(j, min_dist_pos_2, min_dist_2))
 
     # # Initialize the final lists of matching:
-    # fin_matches = []
-    #
-    # # Find the list of matches with the min length :
-    # if len(matches_1) < len(matches_2):
-    #     min_len_matches = matches_1.copy()
-    #     max_len_matches = matches_2.copy()
-    # else:
-    #     min_len_matches = matches_2.copy()
-    #     max_len_matches = matches_1.copy()
+    fin_matches = []
+
+    # Find the list of matches with the min length :
+    if len(matches_1) < len(matches_2):
+        min_len_matches = matches_1.copy()
+        max_len_matches = matches_2.copy()
+    else:
+        min_len_matches = matches_2.copy()
+        max_len_matches = matches_1.copy()
     #
     # # Cross checking:
-    # for i in min_len_matches:
-    #     if min_len_matches[i].queryIdx == max_len_matches[]
+    # # for i in min_len_matches:
+    # #     if min_len_matches[i].queryIdx == max_len_matches[]
+    #
+    # for i in range(len(max_len_matches)):
+    #     for j in range(len(min_len_matches)):
+    #         if min_len_matches[j].queryIdx == max_len_matches[i].trainIdx and min_len_matches[j].trainIdx == max_len_matches[i].queryIdx:
+    #             fin_matches.append(cv2.DMatch(min_len_matches[j].queryIdx, min_len_matches[j].trainIdx, min_len_matches[j].distance))
 
 
+
+    # return fin_matches
+    # return fin_matches
     return matches_1
 
 def cropping(image):
@@ -137,9 +145,9 @@ def cropping(image):
 
     crop = final_image[y:y + h, x:x + w]
 
-    cv2.namedWindow('crop')
+    cv2.namedWindow('crop for ' + image_path[8:-4])
     crop_r = cv2.resize(crop,  (800, 650))
-    cv2.imshow('crop', crop_r)
+    cv2.imshow('crop for ' + image_path[8:-4], crop_r)
     cv2.waitKey(0)
 
     return crop
@@ -151,6 +159,14 @@ first_element = first_image
 
 images = ['dataset/yard-house/yard-house-02.png', 'dataset/yard-house/yard-house-03.png',
           'dataset/yard-house/yard-house-04.png','dataset/yard-house/yard-house-05.png']
+
+
+# first_path = 'dataset/my-house/scene2/png/image_1.png'
+# first_image = cv2.imread(first_path)
+# first_element = first_image
+
+# images = ['dataset/my-house/scene2/png/image_2.png', 'dataset/my-house/scene2/png/image_3.png',
+#           'dataset/my-house/scene2/png/image_4.png']
 
 for image_path in images:
     image = cv2.imread(image_path)
