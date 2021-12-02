@@ -143,7 +143,7 @@ def cropping(image):
     cnt = image_bin_contours[0]
     x, y, w, h = cv2.boundingRect(cnt)
 
-    crop = final_image[y:y + h, x:x + w]
+    crop = image[y:y + h, x:x + w]
 
     cv2.namedWindow('crop for ' + image_path[8:-4])
     crop_r = cv2.resize(crop,  (800, 650))
