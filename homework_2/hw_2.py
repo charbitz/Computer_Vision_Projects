@@ -15,7 +15,7 @@ def panorama(image_2, image_1):
     desc2 = sift.compute(image_2, kp2)
 
     # match_2 matches :
-    matches = match2(desc1[1], desc2[1])
+    matches = matching(desc1[1], desc2[1])
 
     image_w_matches = cv2.drawMatches(image_1, desc1[0], image_2, desc2[0], matches, None)
     cv2.namedWindow('image_w_matches')
@@ -58,29 +58,63 @@ def panorama(image_2, image_1):
 
     return merged_image
 
-def match2(d1, d2):
+def matching(d1, d2):
     n1 = d1.shape[0]
     n2 = d2.shape[0]
 
-    matches = []
+    matches_1 = []
     for i in range(n1):
-        fv = d1[i, :]
-        diff = d2 - fv
+        row_d1 = d1[i, :]
+        diff = d2 - row_d1
         diff = np.abs(diff)
         distances = np.sum(diff, axis=1)
 
-        i2 = np.argmin(distances)
-        mindist2 = distances[i2]
+        min_dist_pos_1 = np.argmin(distances)
+        min_dist_1 = distances[min_dist_pos_1]
 
-        distances[i2] = np.inf
+        distances[min_dist_pos_1] = np.inf
 
-        i3 = np.argmin(distances)
-        mindist3 = distances[i3]
+        sec_min_dist_pos_1 = np.argmin(distances)
+        sec_min_dist_1 = distances[sec_min_dist_pos_1]
 
-        if mindist2 / mindist3 < 0.5:
-            matches.append(cv2.DMatch(i, i2, mindist2))
+        if min_dist_1 / sec_min_dist_1 < 0.5:
+            matches_1.append(cv2.DMatch(i, min_dist_pos_1, min_dist_1))
 
-    return matches
+    matches_2 = []
+    for i in range(n2):
+        row_d2 = d2[i, :]
+        diff = d1 - row_d2
+        diff = np.abs(diff)
+        distances = np.sum(diff, axis=1)
+
+        min_dist_pos_2 = np.argmin(distances)
+        min_dist_2 = distances[min_dist_pos_2]
+
+        distances[min_dist_pos_2] = np.inf
+
+        sec_min_dist_pos_2 = np.argmin(distances)
+        sec_min_dist_2 = distances[sec_min_dist_pos_2]
+
+        if min_dist_2 / sec_min_dist_2 < 0.5:
+            matches_2.append(cv2.DMatch(i, min_dist_pos_2, min_dist_2))
+
+    # # Initialize the final lists of matching:
+    # fin_matches = []
+    #
+    # # Find the list of matches with the min length :
+    # if len(matches_1) < len(matches_2):
+    #     min_len_matches = matches_1.copy()
+    #     max_len_matches = matches_2.copy()
+    # else:
+    #     min_len_matches = matches_2.copy()
+    #     max_len_matches = matches_1.copy()
+    #
+    # # Cross checking:
+    # for i in min_len_matches:
+    #     if min_len_matches[i].queryIdx == max_len_matches[]
+
+
+    return matches_1
 
 def cropping(image):
 
