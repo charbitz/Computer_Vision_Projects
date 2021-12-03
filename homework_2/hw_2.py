@@ -6,6 +6,12 @@ def panorama(image_2, image_1):
     # sift for images :
     sift = cv2.xfeatures2d_SIFT.create(2000)
 
+    # surf = cv2.xfeatures2d_SURF.create(400)
+    # surf = cv2.xfeatures2d_SURF.create(hessianThreshold=400,nOctaves=None,nOctaveLayers=None,extended=1,upright=None)
+    #
+    # kp1, desc1 = surf.detectAndCompute(image_1, None)
+    # kp2, desc2 = surf.detectAndCompute(image_2, None)
+
     # sift keypoints and descriptors of image :
     kp1 = sift.detect(image_1)
     desc1 = sift.compute(image_1, kp1)
@@ -151,6 +157,28 @@ def cropping(image):
     cv2.waitKey(0)
 
     return crop
+
+# def panorama_surf(image_1, image_2):
+#
+#     surf = cv2.SURF(400)
+#     surf.hessianThreshold = 50000
+#
+#     kp1, desc1 = surf.detectAndCompute(image_1, None)
+#     kp2, desc2 = surf.detectAndCompute(image_2, None)
+#
+#     image_1w = cv2.drawKeypoints(image_1, kp1, None, (255, 0, 0), 4)
+#
+#     cv2.namedWindow('image_1w for' + image_path[8:-4])
+#     image_1w_r = cv2.resize(image_1w, (800, 650))
+#     cv2.imshow('image_1w for ' + image_path[8:-4], image_1w_r)
+#     cv2.waitKey(0)
+#
+#     image_2w = cv2.drawKeypoints(image_2, kp2, None, (255, 0, 0), 4)
+#
+#     cv2.namedWindow('image_2w for' + image_path[8:-4])
+#     image_2w_r = cv2.resize(image_2w, (800, 650))
+#     cv2.imshow('image_2w for ' + image_path[8:-4], image_2w_r)
+#     cv2.waitKey(0)
 
 
 first_path = 'dataset/yard-house/yard-house-01.png'
