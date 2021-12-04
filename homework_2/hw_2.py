@@ -120,8 +120,8 @@ def matching(d1, d2):
 
 
 
-    # return matches_1
-    return matches_2
+    return matches_1
+    # return matches_2
     # return fin_matches
 
 def cropping(image):
@@ -227,9 +227,10 @@ images = ['dataset/yard-house/yard-house-02.png', 'dataset/yard-house/yard-house
 # first_path = 'dataset/my-house/scene2/png/image_1.png'
 # first_image = cv2.imread(first_path)
 # first_element = first_image
-
+#
 # images = ['dataset/my-house/scene2/png/image_2.png', 'dataset/my-house/scene2/png/image_3.png',
 #           'dataset/my-house/scene2/png/image_4.png']
+# search for error: (-215:Assertion failed) !ssize.empty() in function 'cv::resize'drawMatches
 
 for image_path in images:
     image = cv2.imread(image_path)
@@ -240,10 +241,10 @@ for image_path in images:
     cv2.waitKey(0)
 
     # sift algorithm :
-    # final_image = panorama(first_element, image)
+    final_image = panorama(first_element, image)
 
     # surf algorithm :
-    final_image = panorama_surf(first_element, image)
+    # final_image = panorama_surf(first_element, image)
 
     cv2.namedWindow('final_image for ' + image_path[8:-4])
     final_image_r = cv2.resize(final_image, (800, 650))
