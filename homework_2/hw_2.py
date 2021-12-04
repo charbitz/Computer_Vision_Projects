@@ -6,12 +6,6 @@ def panorama(image_2, image_1):
     # sift for images :
     sift = cv2.xfeatures2d_SIFT.create(2000)
 
-    # surf = cv2.xfeatures2d_SURF.create(400)
-    # surf = cv2.xfeatures2d_SURF.create(hessianThreshold=400,nOctaves=None,nOctaveLayers=None,extended=1,upright=None)
-    #
-    # kp1, desc1 = surf.detectAndCompute(image_1, None)
-    # kp2, desc2 = surf.detectAndCompute(image_2, None)
-
     # sift keypoints and descriptors of image :
     kp1 = sift.detect(image_1)
     desc1 = sift.compute(image_1, kp1)
@@ -158,27 +152,68 @@ def cropping(image):
 
     return crop
 
-# def panorama_surf(image_1, image_2):
-#
-#     surf = cv2.SURF(400)
-#     surf.hessianThreshold = 50000
-#
-#     kp1, desc1 = surf.detectAndCompute(image_1, None)
-#     kp2, desc2 = surf.detectAndCompute(image_2, None)
-#
-#     image_1w = cv2.drawKeypoints(image_1, kp1, None, (255, 0, 0), 4)
-#
-#     cv2.namedWindow('image_1w for' + image_path[8:-4])
-#     image_1w_r = cv2.resize(image_1w, (800, 650))
-#     cv2.imshow('image_1w for ' + image_path[8:-4], image_1w_r)
-#     cv2.waitKey(0)
-#
-#     image_2w = cv2.drawKeypoints(image_2, kp2, None, (255, 0, 0), 4)
-#
-#     cv2.namedWindow('image_2w for' + image_path[8:-4])
-#     image_2w_r = cv2.resize(image_2w, (800, 650))
-#     cv2.imshow('image_2w for ' + image_path[8:-4], image_2w_r)
-#     cv2.waitKey(0)
+def panorama_surf(image_2, image_1):
+
+    surf = cv2.xfeatures2d_SURF.create(hessianThreshold=10000,extended=1)
+    # surf.hessianThreshold = 50000
+
+    kp1, desc1 = surf.detectAndCompute(image_1, None)
+    kp2, desc2 = surf.detectAndCompute(image_2, None)
+
+    image_1w = cv2.drawKeypoints(image_1, kp1, None, (255, 0, 0), 4)
+
+    cv2.namedWindow('image_1w surf for' + image_path[8:-4])
+    image_1w_r = cv2.resize(image_1w, (800, 650))
+    cv2.imshow('image_1w surf  for ' + image_path[8:-4], image_1w_r)
+    cv2.waitKey(0)
+
+    image_2w = cv2.drawKeypoints(image_2, kp2, None, (255, 0, 0), 4)
+
+    cv2.namedWindow('image_2w surf for' + image_path[8:-4])
+    image_2w_r = cv2.resize(image_2w, (800, 650))
+    cv2.imshow('image_2w surf for ' + image_path[8:-4], image_2w_r)
+    cv2.waitKey(0)
+
+    matches = matching(desc1, desc2)
+
+    image_w_matches = cv2.drawMatches(image_1, kp1, image_2, kp2, matches, None)
+    cv2.namedWindow('image_w_matches surf for ' + image_path[8:-4])
+    image_w_matches_r = cv2.resize(image_w_matches, (800, 650))
+    cv2.imshow('image_w_matches surf for ' + image_path[8:-4], image_w_matches_r)
+    cv2.waitKey(0)
+
+    img_pt1 = []
+    img_pt2 = []
+    for x in matches:
+        img_pt1.append(kp1[x.queryIdx].pt)
+        img_pt2.append(kp2[x.trainIdx].pt)
+    img_pt1 = np.array(img_pt1)
+    img_pt2 = np.array(img_pt2)
+
+    # homography :
+    M = 0
+    mask = 0
+    M, mask = cv2.findHomography(img_pt2, img_pt1, cv2.RANSAC)
+
+    # merged image :
+    merged_image = []
+    merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
+
+    cv2.namedWindow('merged_image surf for ' + image_path[8:-4])
+    merged_image_r = cv2.resize(merged_image, (800, 650))
+    cv2.imshow('merged_image surf for ' + image_path[8:-4], merged_image_r)
+    cv2.waitKey(0)
+    # cv2.destroyWindow('merged_image')
+
+    merged_image[0: image_1.shape[0], 0: image_1.shape[1]] = image_1
+
+    cv2.namedWindow('merged_image_2 surf for ' + image_path[8:-4])
+    merged_image_r = cv2.resize(merged_image, (800, 650))
+    cv2.imshow('merged_image_2 surf for ' + image_path[8:-4], merged_image_r)
+    cv2.waitKey(0)
+    # cv2.destroyWindow('merged_image_2')
+
+    return merged_image
 
 
 first_path = 'dataset/yard-house/yard-house-01.png'
@@ -204,7 +239,11 @@ for image_path in images:
     cv2.imshow('image for ' + image_path[8:-4], image_r)
     cv2.waitKey(0)
 
-    final_image = panorama(first_element, image)
+    # sift algorithm :
+    # final_image = panorama(first_element, image)
+
+    # surf algorithm :
+    final_image = panorama_surf(first_element, image)
 
     cv2.namedWindow('final_image for ' + image_path[8:-4])
     final_image_r = cv2.resize(final_image, (800, 650))
