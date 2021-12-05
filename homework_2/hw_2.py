@@ -1,10 +1,10 @@
 import numpy as np
 import cv2
 
-def panorama(image_2, image_1):
+def panorama(image_1, image_2):
 
     # sift for images :
-    sift = cv2.xfeatures2d_SIFT.create(2000)
+    sift = cv2.xfeatures2d_SIFT.create(4000)
 
     # sift keypoints and descriptors of image :
     kp1 = sift.detect(image_1)
@@ -14,7 +14,6 @@ def panorama(image_2, image_1):
     kp2 = sift.detect(image_2)
     desc2 = sift.compute(image_2, kp2)
 
-    # match_2 matches :
     matches = matching(desc1[1], desc2[1])
 
     image_w_matches = cv2.drawMatches(image_1, desc1[0], image_2, desc2[0], matches, None)
@@ -24,7 +23,6 @@ def panorama(image_2, image_1):
     cv2.waitKey(0)
     # cv2.destroyWindow('image_w_matches')
 
-    # implementation for matches_2 :
     img_pt1 = []
     img_pt2 = []
     for x in matches:
@@ -34,13 +32,13 @@ def panorama(image_2, image_1):
     img_pt2 = np.array(img_pt2)
 
     # homography :
-    M = 0
-    mask = 0
     M, mask = cv2.findHomography(img_pt2, img_pt1, cv2.RANSAC)
 
     # merged image :
     merged_image = []
-    merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
+    # merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
+    merged_image = cv2.warpPerspective(image_2, M, (4*image_1.shape[1] , 4*image_1.shape[0]), flags = cv2.INTER_NEAREST )
+
 
     cv2.namedWindow('merged_image for ' + image_path[8:-4])
     merged_image_r = cv2.resize(merged_image,  (800, 650))
@@ -145,11 +143,6 @@ def cropping(image):
 
     crop = image[y:y + h, x:x + w]
 
-    cv2.namedWindow('crop for ' + image_path[8:-4])
-    crop_r = cv2.resize(crop,  (800, 650))
-    cv2.imshow('crop for ' + image_path[8:-4], crop_r)
-    cv2.waitKey(0)
-
     return crop
 
 def panorama_surf(image_2, image_1):
@@ -218,19 +211,18 @@ def panorama_surf(image_2, image_1):
 
 first_path = 'dataset/yard-house/yard-house-01.png'
 first_image = cv2.imread(first_path)
-first_element = first_image
+second_element = first_image
 
 images = ['dataset/yard-house/yard-house-02.png', 'dataset/yard-house/yard-house-03.png',
           'dataset/yard-house/yard-house-04.png','dataset/yard-house/yard-house-05.png']
 
 
-# first_path = 'dataset/my-house/scene2/png/image_1.png'
+# first_path = 'dataset/my-images/scene2/png/image_4.png'
 # first_image = cv2.imread(first_path)
 # first_element = first_image
 #
-# images = ['dataset/my-house/scene2/png/image_2.png', 'dataset/my-house/scene2/png/image_3.png',
-#           'dataset/my-house/scene2/png/image_4.png']
-# search for error: (-215:Assertion failed) !ssize.empty() in function 'cv::resize'drawMatches
+# images = ['dataset/my-images/scene2/png/image_3.png', 'dataset/my-images/scene2/png/image_2.png',
+#           'dataset/my-images/scene2/png/image_1.png']
 
 for image_path in images:
     image = cv2.imread(image_path)
@@ -241,7 +233,7 @@ for image_path in images:
     cv2.waitKey(0)
 
     # sift algorithm :
-    final_image = panorama(first_element, image)
+    final_image = panorama(image, second_element)
 
     # surf algorithm :
     # final_image = panorama_surf(first_element, image)
@@ -258,5 +250,5 @@ for image_path in images:
     cv2.imshow('image_cropped for ' + image_path[8:-4], image_cropped_r)
     cv2.waitKey(0)
 
-    first_element = image_cropped
+    second_element = image_cropped.copy()
     print("first_element changed !")
