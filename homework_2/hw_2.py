@@ -145,7 +145,7 @@ def cropping(image):
 
     return crop
 
-def panorama_surf(image_2, image_1):
+def panorama_surf(image_1, image_2):
 
     surf = cv2.xfeatures2d_SURF.create(hessianThreshold=10000,extended=1)
     # surf.hessianThreshold = 50000
@@ -190,7 +190,8 @@ def panorama_surf(image_2, image_1):
 
     # merged image :
     merged_image = []
-    merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
+    # merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
+    merged_image = cv2.warpPerspective(image_2, M, (4*image_1.shape[1] , 4*image_1.shape[0]), flags = cv2.INTER_NEAREST )
 
     cv2.namedWindow('merged_image surf for ' + image_path[8:-4])
     merged_image_r = cv2.resize(merged_image, (800, 650))
@@ -233,10 +234,10 @@ for image_path in images:
     cv2.waitKey(0)
 
     # sift algorithm :
-    final_image = panorama(image, second_element)
+    # final_image = panorama(image, second_element)
 
     # surf algorithm :
-    # final_image = panorama_surf(first_element, image)
+    final_image = panorama_surf(image, second_element)
 
     cv2.namedWindow('final_image for ' + image_path[8:-4])
     final_image_r = cv2.resize(final_image, (800, 650))
@@ -252,3 +253,7 @@ for image_path in images:
 
     second_element = image_cropped.copy()
     print("first_element changed !")
+
+# saving results:
+# write_path = "results/" + image_path[8:-4] + "_res.png"
+# cv2.imwrite(write_path, image_cropped)
