@@ -95,7 +95,7 @@ def cropping(image):
 
     thresh, image_bin = cv2.threshold(src=image_gr, thresh=0, maxval=255, type=cv2.THRESH_BINARY)
     cv2.namedWindow('image_bin')
-    image_bin_r = cv2.resize(image_bin,  (800, 650))
+    image_bin_r = cv2.resize(image_bin, (800, 650))
     cv2.imshow('image_bin', image_bin_r)
     cv2.waitKey(0)
 
@@ -158,7 +158,7 @@ def panorama_surf(image_1, image_2):
     # merged image :
     merged_image = []
     # merged_image = cv2.warpPerspective(image_2, M, (image_1.shape[1] + 1000, image_1.shape[0] + 1000))
-    merged_image = cv2.warpPerspective(image_2, M, (4*image_1.shape[1] , 4*image_1.shape[0]), flags = cv2.INTER_NEAREST )
+    merged_image = cv2.warpPerspective(image_2, M, (4*image_1.shape[1] , 4*image_1.shape[0]))
 
     # cv2.namedWindow('merged_image surf for ' + image_path[8:-4])
     # merged_image_r = cv2.resize(merged_image, (800, 650))
