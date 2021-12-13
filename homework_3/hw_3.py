@@ -46,19 +46,19 @@ def load_vocabulary():
     return vocabulary
 
 def encode_bovw_descriptor(desc, vocabulary):
-    bow_desc = np.zeros((1, vocabulary.shape[0]))
+    bovw_desc = np.zeros((1, vocabulary.shape[0]))
     for d in range(desc.shape[0]):
         distances = np.sum((desc[d, :] - vocabulary) ** 2, axis=1)
         mini = np.argmin(distances)
-        bow_desc[0, mini] += 1
-    if np.sum(bow_desc) > 0:
-        bow_desc = bow_desc / np.sum(bow_desc)
-    return bow_desc
+        bovw_desc[0, mini] += 1
+    if np.sum(bovw_desc) > 0:
+        bovw_desc = bovw_desc / np.sum(bovw_desc)
+    return bovw_desc
 
 def create_index(train_folders, vocabulary):
     print('Creating index...')
     img_paths = []
-    bow_descs = np.zeros((0, vocabulary.shape[0]))
+    bovw_descs = np.zeros((0, vocabulary.shape[0]))
     for train_folder in train_folders:
         for folder in train_folder:
             files = os.listdir(folder)
@@ -67,19 +67,19 @@ def create_index(train_folders, vocabulary):
                 desc = extract_local_features(path)
                 if desc is None:
                     continue
-                bow_desc = encode_bovw_descriptor(desc, vocabulary)
+                bovw_desc = encode_bovw_descriptor(desc, vocabulary)
 
                 img_paths.append(path)
-                bow_descs = np.concatenate((bow_descs, bow_desc), axis=0)
+                bovw_descs = np.concatenate((bovw_descs, bovw_desc), axis=0)
 
     # Creating index.npy and index_paths.txt files :
-    np.save('index.npy', bow_descs)
+    np.save('index.npy', bovw_descs)
     with open('index_paths.txt', mode='w+') as file:
         json.dump(img_paths, file)
-    return img_paths, bow_descs
+    return img_paths, bovw_descs
 
 def load_index():
-    bow_descs = np.load('index.npy')
+    bovw_descs = np.load('index.npy')
     with open('index_paths.txt', mode='r') as file:
         img_paths = json.load(file)
     return img_paths, bow_descs
