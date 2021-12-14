@@ -82,7 +82,60 @@ def load_index():
     bovw_descs = np.load('index.npy')
     with open('index_paths.txt', mode='r') as file:
         img_paths = json.load(file)
-    return img_paths, bow_descs
+    return img_paths, bovw_descs
+
+def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
+
+    # Deleting the query's word from the bag of words:
+    for row in range(bovw_descs.shape[0]):
+        if (bovw_descs[row, :] == q_bovw_desc).all():
+            bovw_descs_del = np.delete(bovw_descs, row, 0)
+            print("delete the row:", row)                       # may stay for some prints
+
+    eucl_dist = []
+    # Computing euclidean distance from the query word to all the other words:
+    for row in range(bovw_descs_del.shape[0]):
+        eucl_dist_2 = np.linalg.norm(bovw_descs_del[row, :] - q_bovw_desc)
+        eucl_dist.append(eucl_dist_2)
+
+    classes = [0, 0, 0, 0, 0]
+
+    # Computing the k nearest neighbours :
+    for times in range(k):
+        # Finding the number of the image with minimum distance:
+        mini = np.argmin(eucl_dist)
+
+        # Finding the class with the minimum distance:
+        if "motorbike" in img_paths[mini]:
+            classes[0] += 1
+        elif "school-bus" in img_paths[mini]:
+            classes[1] += 1
+        elif "bike" in img_paths[mini]:
+            classes[2] += 1
+        elif "airplane" in img_paths[mini]:
+            classes[3] += 1
+        elif "car" in img_paths[mini]:
+            classes[4] += 1
+
+        # Setting this minimum distance to infinite, in order not to be appeared again:
+        eucl_dist[mini] = np.inf
+
+    # Finding the class of the query image :
+    max_class = np.argmax(classes)
+
+    class_pred = ""
+    if max_class == 0:
+        class_pred = "motorbike"
+    elif max_class == 1:
+        class_pred = "school-bus"
+    elif max_class == 2:
+        class_pred = "bike"
+    elif max_class == 3:
+        class_pred = "airplane"
+    elif max_class == 4:
+        class_pred = "car"
+
+    return classes, class_pred
 
 # Creating vocabulary :
 # vocabulary = create_vocabulary(train_folders)
@@ -94,4 +147,33 @@ vocabulary = load_vocabulary()
 # img_paths, bow_descs = create_index(train_folders, vocabulary)
 
 # Loading the created index :
-img_paths, bow_descs = load_index()
+img_paths, bovw_descs = load_index()
+
+# image to be classified :
+# query_image_path = train_folders1 = "caltech/imagedb/145.motorbikes-101/145_0025.jpg"
+
+# query_image_path = train_folders1 = "caltech/imagedb/178.school-bus/178_0004.jpg"
+
+# query_image_path = train_folders1 = "caltech/imagedb/224.touring-bike/224_0004.jpg"
+# query_image_path = train_folders1 = "caltech/imagedb/224.touring-bike/224_0095.jpg"
+
+# query_image_path = train_folders1 = "caltech/imagedb/251.airplanes-101/251_0001.jpg"
+
+query_image_path = train_folders1 = "caltech/imagedb/252.car-side-101/252_0006.jpg"
+
+query_image = cv.imread(query_image_path)
+
+cv.namedWindow('query_image', cv.WINDOW_NORMAL)
+cv.imshow('query_image', query_image)
+cv.waitKey(0)
+
+q_desc = extract_local_features(query_image_path)
+
+q_bovw_desc = encode_bovw_descriptor(q_desc, vocabulary)
+
+
+# classification:
+k = 30
+classes, query_class = knn_classifier(q_bovw_desc, bovw_descs, img_paths, k)
+
+print("This belongs to the class:", query_class)
