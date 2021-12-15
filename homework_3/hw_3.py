@@ -114,19 +114,19 @@ def load_index():
 
 def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
 
-    # Deleting the query's word from the bag of words:
-    for row in range(bovw_descs.shape[0]):
-        if (bovw_descs[row, :] == q_bovw_desc).all():
-            bovw_descs_del = np.delete(bovw_descs, row, 0)
-            print("delete the row:", row)                       # may stay for some prints
+    # # Deleting the query's word from the bag of words:
+    # for row in range(bovw_descs.shape[0]):
+    #     if (bovw_descs[row, :] == q_bovw_desc).all():
+    #         bovw_descs_del = np.delete(bovw_descs, row, 0)
+    #         print("delete the row:", row)                       # may stay for some prints
 
     eucl_dist = []
     # Computing euclidean distance from the query word to all the other words:
-    for row in range(bovw_descs_del.shape[0]):
-        eucl_dist_2 = np.linalg.norm(bovw_descs_del[row, :] - q_bovw_desc)
+    for row in range(bovw_descs.shape[0]):
+        eucl_dist_2 = np.linalg.norm(bovw_descs[row, :] - q_bovw_desc)
         eucl_dist.append(eucl_dist_2)
 
-    classes = [0, 0, 0, 0, 0]
+    neighbours = [0, 0, 0, 0, 0]
 
     # Computing the k nearest neighbours :
     for times in range(k):
@@ -135,21 +135,21 @@ def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
 
         # Finding the class with the minimum distance:
         if "motorbike" in img_paths[mini]:
-            classes[0] += 1
+            neighbours[0] += 1
         elif "school-bus" in img_paths[mini]:
-            classes[1] += 1
+            neighbours[1] += 1
         elif "bike" in img_paths[mini]:
-            classes[2] += 1
+            neighbours[2] += 1
         elif "airplane" in img_paths[mini]:
-            classes[3] += 1
+            neighbours[3] += 1
         elif "car" in img_paths[mini]:
-            classes[4] += 1
+            neighbours[4] += 1
 
         # Setting this minimum distance to infinite, in order not to be appeared again:
         eucl_dist[mini] = np.inf
 
     # Finding the class of the query image :
-    max_class = np.argmax(classes)
+    max_class = np.argmax(neighbours)
 
     class_pred = ""
     if max_class == 0:
@@ -163,7 +163,7 @@ def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
     elif max_class == 4:
         class_pred = "car"
 
-    return classes, class_pred
+    return neighbours, class_pred
 
 # Creating vocabulary :
 # vocabulary = create_vocabulary(train_folders)
@@ -177,31 +177,44 @@ vocabulary = load_vocabulary()
 # Loading the created index :
 img_paths, img_paths_test, bovw_descs = load_index()
 
-# image to be classified :
-# query_image_path = "caltech/imagedb/145.motorbikes-101/145_0025.jpg"
 
-# query_image_path = "caltech/imagedb/178.school-bus/178_0004.jpg"
+correct_predictions = 0
+class_exp = ""
 
-# query_image_path = "caltech/imagedb/224.touring-bike/224_0004.jpg"
-# query_image_path = "caltech/imagedb/224.touring-bike/224_0095.jpg"
+# Testing of kNN classifier :
+for test_image_path in img_paths_test:
 
-# query_image_path = "caltech/imagedb/251.airplanes-101/251_0001.jpg"
+    # Measuring the expected(known) class of the image:
+    if "motorbike" in test_image_path:
+        class_exp = "motorbike"
+    elif "school-bus" in test_image_path:
+        class_exp = "school-bus"
+    elif "bike" in test_image_path:
+        class_exp = "bike"
+    elif "airplane" in test_image_path:
+        class_exp = "airplane"
+    elif "car" in test_image_path:
+        class_exp = "car"
 
-query_image_path = "caltech/imagedb/252.car-side-101/252_0006.jpg"
+    # test_image = cv.imread(test_image_path)
+    #
+    # cv.namedWindow('test_image', cv.WINDOW_NORMAL)
+    # cv.imshow('test_image', test_image)
+    # cv.waitKey(0)
 
-query_image = cv.imread(query_image_path)
+    q_desc = extract_local_features(test_image_path)
 
-cv.namedWindow('query_image', cv.WINDOW_NORMAL)
-cv.imshow('query_image', query_image)
-cv.waitKey(0)
+    q_bovw_desc = encode_bovw_descriptor(q_desc, vocabulary)
 
-q_desc = extract_local_features(query_image_path)
+    k = 5
+    neighbours, class_pred = knn_classifier(q_bovw_desc, bovw_descs, img_paths, k)
 
-q_bovw_desc = encode_bovw_descriptor(q_desc, vocabulary)
+    print("This belongs to the class:", class_pred, "   with neighbours:", neighbours)
 
+    if (class_pred == class_exp):
+        correct_predictions += 1
 
-# classification:
-k = 30
-classes, query_class = knn_classifier(q_bovw_desc, bovw_descs, img_paths, k)
+print("correct predictions:", correct_predictions)
 
-print("This belongs to the class:", query_class)
+knn_global_acc = correct_predictions/len(img_paths_test)
+print("The knn accuracy ath the global test set is:", knn_global_acc)
