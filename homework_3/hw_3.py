@@ -11,6 +11,14 @@ train_folders5 = ["caltech/imagedb/252.car-side-101"]
 
 train_folders = [train_folders1, train_folders2, train_folders3, train_folders4, train_folders5]
 
+test_folders1 = ["caltech/imagedb_test/145.motorbikes-101"]
+test_folders2 = ["caltech/imagedb_test/178.school-bus"]
+test_folders3 = ["caltech/imagedb_test/224.touring-bike"]
+test_folders4 = ["caltech/imagedb_test/251.airplanes-101"]
+test_folders5 = ["caltech/imagedb_test/252.car-side-101"]
+
+test_folders = [test_folders1, test_folders2, test_folders3, test_folders4, test_folders5]
+
 sift = cv.xfeatures2d_SIFT.create()
 
 def extract_local_features(path):
@@ -55,7 +63,7 @@ def encode_bovw_descriptor(desc, vocabulary):
         bovw_desc = bovw_desc / np.sum(bovw_desc)
     return bovw_desc
 
-def create_index(train_folders, vocabulary):
+def create_index(train_folders, test_folders, vocabulary):
     print('Creating index...')
     img_paths = []
     bovw_descs = np.zeros((0, vocabulary.shape[0]))
@@ -76,13 +84,33 @@ def create_index(train_folders, vocabulary):
     np.save('index.npy', bovw_descs)
     with open('index_paths.txt', mode='w+') as file:
         json.dump(img_paths, file)
-    return img_paths, bovw_descs
+
+    img_paths_test = []
+    for test_folder in test_folders:
+        for t_folder in test_folder:
+            t_files = os.listdir(t_folder)
+            for t_file in t_files:
+                t_path = os.path.join(t_folder, t_file)
+                img_paths_test.append(t_path)
+
+    # Creating index_paths_test.txt file :
+    with open('index_paths_test.txt', mode='w+') as t_file:
+        json.dump(img_paths_test, t_file)
+
+    return img_paths, img_paths_test, bovw_descs
 
 def load_index():
     bovw_descs = np.load('index.npy')
+
+    # Loading training image paths (img_paths) :
     with open('index_paths.txt', mode='r') as file:
         img_paths = json.load(file)
-    return img_paths, bovw_descs
+
+    # Loading testing image paths (img_paths_test) :
+    with open('index_paths_test.txt', mode='r') as t_file:
+        img_paths_test = json.load(t_file)
+
+    return img_paths, img_paths_test, bovw_descs
 
 def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
 
@@ -144,22 +172,22 @@ def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
 vocabulary = load_vocabulary()
 
 # Creating index :
-# img_paths, bow_descs = create_index(train_folders, vocabulary)
+# img_paths, img_paths_test, bow_descs = create_index(train_folders, test_folders, vocabulary)
 
 # Loading the created index :
-img_paths, bovw_descs = load_index()
+img_paths, img_paths_test, bovw_descs = load_index()
 
 # image to be classified :
-# query_image_path = train_folders1 = "caltech/imagedb/145.motorbikes-101/145_0025.jpg"
+# query_image_path = "caltech/imagedb/145.motorbikes-101/145_0025.jpg"
 
-# query_image_path = train_folders1 = "caltech/imagedb/178.school-bus/178_0004.jpg"
+# query_image_path = "caltech/imagedb/178.school-bus/178_0004.jpg"
 
-# query_image_path = train_folders1 = "caltech/imagedb/224.touring-bike/224_0004.jpg"
-# query_image_path = train_folders1 = "caltech/imagedb/224.touring-bike/224_0095.jpg"
+# query_image_path = "caltech/imagedb/224.touring-bike/224_0004.jpg"
+# query_image_path = "caltech/imagedb/224.touring-bike/224_0095.jpg"
 
-# query_image_path = train_folders1 = "caltech/imagedb/251.airplanes-101/251_0001.jpg"
+# query_image_path = "caltech/imagedb/251.airplanes-101/251_0001.jpg"
 
-query_image_path = train_folders1 = "caltech/imagedb/252.car-side-101/252_0006.jpg"
+query_image_path = "caltech/imagedb/252.car-side-101/252_0006.jpg"
 
 query_image = cv.imread(query_image_path)
 
