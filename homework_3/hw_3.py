@@ -165,6 +165,182 @@ def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
 
     return neighbours, class_pred
 
+def svm_one_versus_all_training(img_paths):
+    # SVM for motorbike training :
+    print('Training SVM for motorbike ...')
+    svm_motorbike = cv.ml.SVM_create()
+    svm_motorbike.setType(cv.ml.SVM_C_SVC)
+    svm_motorbike.setKernel(svm_kernel_type)
+    svm_motorbike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+
+    labels_motorbike = []
+    for i in img_paths:
+        labels_motorbike.append('motorbike' in i)
+    labels_motorbike = np.array(labels_motorbike, np.int32)
+
+    svm_motorbike.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_motorbike)
+    svm_motorbike.save('svm_motorbike')
+    # ###############################################################################################
+
+    # SVM for school-bus training :
+    print('Training SVM for school-bus ...')
+    svm_schoolbus = cv.ml.SVM_create()
+    svm_schoolbus.setType(cv.ml.SVM_C_SVC)
+    svm_schoolbus.setKernel(svm_kernel_type)
+    svm_schoolbus.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+
+    labels_schoolbus = []
+    for i in img_paths:
+        labels_schoolbus.append('school-bus' in i)
+    labels_schoolbus = np.array(labels_schoolbus, np.int32)
+
+    svm_schoolbus.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_schoolbus)
+    svm_schoolbus.save('svm_schoolbus')
+    # ###############################################################################################
+
+    # SVM for touring-bike training :
+    print('Training SVM for touring-bike ...')
+    svm_bike = cv.ml.SVM_create()
+    svm_bike.setType(cv.ml.SVM_C_SVC)
+    svm_bike.setKernel(svm_kernel_type)
+    svm_bike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+
+    labels_bike = []
+    for i in img_paths:
+        labels_bike.append('touring-bike' in i)
+    labels_bike = np.array(labels_bike, np.int32)
+
+    svm_bike.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_bike)
+    svm_bike.save('svm_bike')
+    # ###############################################################################################
+
+    # SVM for airplane training :
+    print('Training SVM for airplane ...')
+    svm_airplane = cv.ml.SVM_create()
+    svm_airplane.setType(cv.ml.SVM_C_SVC)
+    svm_airplane.setKernel(svm_kernel_type)
+    svm_airplane.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+
+    labels_airplane = []
+    for i in img_paths:
+        labels_airplane.append('airplane' in i)
+    labels_airplane = np.array(labels_airplane, np.int32)
+
+    svm_airplane.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_airplane)
+    svm_airplane.save('svm_airplane')
+    # ###############################################################################################
+
+    # SVM for car training :
+    print('Training SVM for car ...')
+    svm_car = cv.ml.SVM_create()
+    svm_car.setType(cv.ml.SVM_C_SVC)
+    svm_car.setKernel(svm_kernel_type)
+    svm_car.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+
+    labels_car = []
+    for i in img_paths:
+        labels_car.append('car' in i)
+    labels_car = np.array(labels_car, np.int32)
+
+    svm_car.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_car)
+    svm_car.save('svm_car')
+
+    return svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car
+
+
+def svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car ):
+    motorbikes = 0
+    schoolbuses = 0
+    bikes = 0
+    airplanes = 0
+    cars = 0
+
+    svm_class_pred_list = []
+    svm_class_exp_list = []
+
+    for image_path in img_paths_test:
+
+        print("image path No:", image_path)
+
+        svm_class_exp = ""
+        svm_class_pred = ""
+
+        # Extracting the expected class of the test image path :
+        svm_class_exp = extract_image_path_class_exp(image_path)
+        svm_class_exp_list.append(svm_class_exp)
+
+        test_desc = extract_local_features(image_path)
+        test_bovw_desc = encode_bovw_descriptor(test_desc, vocabulary)
+
+        print("SVM classifier testing for motorbikes:")
+        response_motorbikes = svm_motorbike.predict(test_bovw_desc.astype(np.float32),
+                                                    flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
+        if response_motorbikes[1] < 0:
+            print('It is a motorbike')
+        else:
+            print('It is sth else')
+        # pass
+
+        print("SVM classifier testing for school-bus:")
+        response_schoolbus = svm_schoolbus.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
+        if response_schoolbus[1] < 0:
+            print('It is a school-bus')
+        else:
+            print('It is sth else')
+        # pass
+
+        print("SVM classifier testing for touring-bike:")
+        response_bike = svm_bike.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
+        if response_bike[1] < 0:
+            print('It is a touring-bike')
+        else:
+            print('It is sth else')
+        # pass
+
+        print("SVM classifier testing for aiplane:")
+        response_airplane = svm_airplane.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
+        if response_airplane[1] < 0:
+            print('It is a aiplane')
+        else:
+            print('It is sth else')
+        # pass
+
+        print("SVM classifier testing for car:")
+        response_car = svm_car.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
+        if response_car[1] < 0:
+            print('It is a car')
+        else:
+            print('It is sth else')
+        # pass
+
+        min_dist = min(response_motorbikes[1], response_schoolbus[1], response_bike[1], response_airplane[1],
+                       response_car[1])
+
+        if min_dist == response_motorbikes[1]:
+            svm_class_pred = "motorbike"
+            motorbikes += 1
+        elif min_dist == response_schoolbus[1]:
+            svm_class_pred = "school-bus"
+            schoolbuses += 1
+        elif min_dist == response_bike[1]:
+            svm_class_pred = "bike"
+            bikes += 1
+        elif min_dist == response_airplane[1]:
+            svm_class_pred = "airplane"
+            airplanes += 1
+        elif min_dist == response_car[1]:
+            svm_class_pred = "car"
+            cars += 1
+
+        svm_class_pred_list.append(svm_class_pred)
+        print("The final classification is ", svm_class_pred)
+
+        print(" ")
+
+        svm_class_pred = ""
+
+    return svm_class_pred_list, svm_class_exp_list
+
 
 def extract_image_path_class_exp(test_image_path):
     class_exp = ""
@@ -257,7 +433,7 @@ class_exp_list = []
 # Testing of kNN classifier :
 for test_image_path in img_paths_test:
 
-    # Measuring the expected(known) class of the image:
+    # Measuring the test image's expected(known) class :
     class_exp = extract_image_path_class_exp(test_image_path)
     class_exp_list.append(class_exp)
 
@@ -275,7 +451,7 @@ for test_image_path in img_paths_test:
 
     print("This belongs to the class:", class_pred, "   with neighbours:", neighbours)
 
-# Printing the accuracy results of the knn classifier :
+# Computing the accuracy of the knn classifier :
 motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc = compute_accuracy(class_pred_list, class_exp_list)
 
 knn_results = [motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc]
@@ -290,177 +466,13 @@ svm_kernel_type = cv.ml.SVM_RBF
 # Creating a global variable for the max number of iterations of the svm  :
 max_num_iter = 200
 
-# SVM for motorbike training :
-print('Training SVM for motorbike ...')
-svm_motorbike = cv.ml.SVM_create()
-svm_motorbike.setType(cv.ml.SVM_C_SVC)
-svm_motorbike.setKernel(svm_kernel_type)
-svm_motorbike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+# SVM training :
+svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car = svm_one_versus_all_training(img_paths)
 
-labels_motorbike = []
-for i in img_paths:
-    labels_motorbike.append('motorbike' in i)
-labels_motorbike = np.array(labels_motorbike, np.int32)
+# SVM testing :
+svm_class_pred_list, svm_class_exp_list = svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car)
 
-svm_motorbike.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_motorbike)
-svm_motorbike.save('svm_motorbike')
-# ###############################################################################################
-
-# SVM for school-bus training :
-print('Training SVM for school-bus ...')
-svm_schoolbus = cv.ml.SVM_create()
-svm_schoolbus.setType(cv.ml.SVM_C_SVC)
-svm_schoolbus.setKernel(svm_kernel_type)
-svm_schoolbus.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
-
-labels_schoolbus = []
-for i in img_paths:
-    labels_schoolbus.append('school-bus' in i)
-labels_schoolbus = np.array(labels_schoolbus, np.int32)
-
-svm_schoolbus.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_schoolbus)
-svm_schoolbus.save('svm_schoolbus')
-# ###############################################################################################
-
-# SVM for touring-bike training :
-print('Training SVM for touring-bike ...')
-svm_bike = cv.ml.SVM_create()
-svm_bike.setType(cv.ml.SVM_C_SVC)
-svm_bike.setKernel(svm_kernel_type)
-svm_bike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
-
-labels_bike = []
-for i in img_paths:
-    labels_bike.append('touring-bike' in i)
-labels_bike = np.array(labels_bike, np.int32)
-
-svm_bike.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_bike)
-svm_bike.save('svm_bike')
-# ###############################################################################################
-
-# SVM for airplane training :
-print('Training SVM for airplane ...')
-svm_airplane = cv.ml.SVM_create()
-svm_airplane.setType(cv.ml.SVM_C_SVC)
-svm_airplane.setKernel(svm_kernel_type)
-svm_airplane.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
-
-labels_airplane = []
-for i in img_paths:
-    labels_airplane.append('airplane' in i)
-labels_airplane = np.array(labels_airplane, np.int32)
-
-svm_airplane.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_airplane)
-svm_airplane.save('svm_airplane')
-# ###############################################################################################
-
-# SVM for car training :
-print('Training SVM for car ...')
-svm_car = cv.ml.SVM_create()
-svm_car.setType(cv.ml.SVM_C_SVC)
-svm_car.setKernel(svm_kernel_type)
-svm_car.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
-
-labels_car = []
-for i in img_paths:
-    labels_car.append('car' in i)
-labels_car = np.array(labels_car, np.int32)
-
-svm_car.trainAuto(bovw_descs.astype(np.float32), cv.ml.ROW_SAMPLE, labels_car)
-svm_car.save('svm_car')
-# ###############################################################################################
-
-# ###############################################################################################
-motorbikes = 0
-schoolbuses = 0
-bikes = 0
-airplanes = 0
-cars = 0
-
-svm_class_pred_list = []
-svm_class_exp_list = []
-
-for image_path in img_paths_test:
-
-    print("image path No:", image_path)
-
-    svm_class_exp = ""
-    svm_class_pred = ""
-
-    # Extracting the expected class of the test image path :
-    svm_class_exp = extract_image_path_class_exp(image_path)
-    svm_class_exp_list.append(svm_class_exp)
-
-    test_desc = extract_local_features(image_path)
-    test_bovw_desc = encode_bovw_descriptor(test_desc, vocabulary)
-
-    print("SVM classifier testing for motorbikes:")
-    response_motorbikes = svm_motorbike.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
-    if response_motorbikes[1] < 0:
-        print('It is a motorbike')
-    else:
-        print('It is sth else')
-    # pass
-
-    print("SVM classifier testing for school-bus:")
-    response_schoolbus = svm_schoolbus.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
-    if response_schoolbus[1] < 0:
-        print('It is a school-bus')
-    else:
-        print('It is sth else')
-    # pass
-
-    print("SVM classifier testing for touring-bike:")
-    response_bike = svm_bike.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
-    if response_bike[1] < 0:
-        print('It is a touring-bike')
-    else:
-        print('It is sth else')
-    # pass
-
-    print("SVM classifier testing for aiplane:")
-    response_airplane = svm_airplane.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
-    if response_airplane[1] < 0:
-        print('It is a aiplane')
-    else:
-        print('It is sth else')
-    # pass
-
-    print("SVM classifier testing for car:")
-    response_car = svm_car.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
-    if response_car[1] < 0:
-        print('It is a car')
-    else:
-        print('It is sth else')
-    # pass
-
-    min_dist = min(response_motorbikes[1], response_schoolbus[1], response_bike[1], response_airplane[1], response_car[1])
-
-    if min_dist == response_motorbikes[1]:
-        svm_class_pred = "motorbike"
-        motorbikes += 1
-    elif min_dist == response_schoolbus[1]:
-        svm_class_pred = "school-bus"
-        schoolbuses += 1
-    elif min_dist == response_bike[1]:
-        svm_class_pred = "bike"
-        bikes += 1
-    elif min_dist == response_airplane[1]:
-        svm_class_pred = "airplane"
-        airplanes += 1
-    elif min_dist == response_car[1]:
-        svm_class_pred = "car"
-        cars += 1
-
-    svm_class_pred_list.append(svm_class_pred)
-    print("The final classification is ", svm_class_pred)
-
-    print(" ")
-
-    svm_class_pred = ""
-
+# Computing the accuracy of the SVM classifier :
 svm_motorbike_acc, svm_schoolbus_acc, svm_bike_acc, svm_airplane_acc, svm_car_acc, svm_global_acc = compute_accuracy(svm_class_pred_list, svm_class_exp_list)
-
 results_svm = [svm_motorbike_acc, svm_schoolbus_acc, svm_bike_acc, svm_airplane_acc, svm_car_acc, svm_global_acc]
-
 print("Results of the classifier svm are:", results_svm)
