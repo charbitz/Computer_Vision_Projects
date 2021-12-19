@@ -2,6 +2,7 @@ import os
 import cv2 as cv
 import numpy as np
 import json
+import matplotlib.pyplot as plt
 
 train_folders1 = ["caltech/imagedb/145.motorbikes-101"]
 train_folders2 = ["caltech/imagedb/178.school-bus"]
@@ -409,6 +410,7 @@ def compute_accuracy(class_pred_list, class_exp_list):
 
     return motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc
 
+num_of_words = 50
 
 # Creating vocabulary :
 # vocabulary = create_vocabulary(train_folders)
@@ -422,41 +424,72 @@ vocabulary = load_vocabulary()
 # Loading the created index :
 img_paths, img_paths_test, bovw_descs = load_index()
 
+k_vals = [5, 10, 20, 40, 80, 160, 320]
 
-# correct_predictions = 0
-class_exp = ""
-class_pred = ""
+knn_motorbike_list = []
+knn_schoolbus_list = []
+knn_bike_list = []
+knn_airplane_list = []
+knn_car_list = []
 
-class_pred_list = []
-class_exp_list = []
+knn_global_acc_list = []
 
-# Testing of kNN classifier :
-for test_image_path in img_paths_test:
+for k_value in k_vals:
+    class_exp = ""
+    class_pred = ""
 
-    # Measuring the test image's expected(known) class :
-    class_exp = extract_image_path_class_exp(test_image_path)
-    class_exp_list.append(class_exp)
+    class_pred_list = []
+    class_exp_list = []
 
-    # Extracting the test image's local features :
-    q_desc = extract_local_features(test_image_path)
+    # Testing of kNN classifier :
+    for test_image_path in img_paths_test:
 
-    # Extracting the test image's features based on the BOVW model :
-    q_bovw_desc = encode_bovw_descriptor(q_desc, vocabulary)
+        # Measuring the test image's expected(known) class :
+        class_exp = extract_image_path_class_exp(test_image_path)
+        class_exp_list.append(class_exp)
 
-    # Parameter ok knn: number of neighbours :
-    k = 5
-    neighbours, class_pred = knn_classifier(q_bovw_desc, bovw_descs, img_paths, k)
+        # Extracting the test image's local features :
+        q_desc = extract_local_features(test_image_path)
 
-    class_pred_list.append(class_pred)
+        # Extracting the test image's features based on the BOVW model :
+        q_bovw_desc = encode_bovw_descriptor(q_desc, vocabulary)
 
-    print("This belongs to the class:", class_pred, "   with neighbours:", neighbours)
+        # # Parameter ok knn: number of neighbours :
+        # k = 300
+        neighbours, class_pred = knn_classifier(q_bovw_desc, bovw_descs, img_paths, k_value)
 
-# Computing the accuracy of the knn classifier :
-motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc = compute_accuracy(class_pred_list, class_exp_list)
+        class_pred_list.append(class_pred)
 
-knn_results = [motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc]
+        print("This belongs to the class:", class_pred, "   with neighbours:", neighbours)
 
-print("knn results are:", knn_results)
+    # Computing the accuracy of the knn classifier :
+    motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc = compute_accuracy(class_pred_list, class_exp_list)
+
+    knn_results = [motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc]
+
+    knn_motorbike_list.append(motorbike_acc)
+    knn_schoolbus_list.append(schoolbus_acc)
+    knn_bike_list.append(bike_acc)
+    knn_airplane_list.append(airplane_acc)
+    knn_car_list.append(car_acc)
+
+    knn_global_acc_list.append(global_acc)
+
+    print("knn results with k =", k_value, " are:", knn_results)
+
+# Plotting a diagram to indicate the dependency of the accuracy from the parameter k :
+plt.plot(k_vals,knn_motorbike_list, 'r-o',label='Motorbike accuracy.')
+plt.plot(k_vals,knn_schoolbus_list, 'g-o',label='School-bus accuracy.')
+plt.plot(k_vals,knn_bike_list,      'c-o',label='Bike accuracy.')
+plt.plot(k_vals,knn_airplane_list,  'm-o',label='Airplane accuracy.')
+plt.plot(k_vals,knn_car_list,       'b-o',label='Car accuracy.')
+
+plt.plot(k_vals,knn_global_acc_list,'k-o',label='Global accuracy.')
+plt.title(label=('KNN Classifier with Number of words:', num_of_words))
+plt.xlabel('Parameter k')
+plt.ylabel('Types of Accuracy')
+plt.legend()
+plt.show()
 
 # Creating a global variable for the type of the svm kernel :
 svm_kernel_type = cv.ml.SVM_RBF
