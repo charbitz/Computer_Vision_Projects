@@ -29,7 +29,7 @@ def extract_local_features(path):
     desc = desc[1]
     return desc
 
-def create_vocabulary(train_folders):
+def create_vocabulary(train_folders, num_of_words):
     print('Extracting features...')
     train_descs = np.zeros((0, 128))
     for train_folder in train_folders:
@@ -45,7 +45,7 @@ def create_vocabulary(train_folders):
     # Creating vocabulary with K-Means algorithm :
     print('Creating vocabulary...')
     term_crit = (cv.TERM_CRITERIA_EPS, 30, 0.1)
-    loss, assignments, vocabulary = cv.kmeans(train_descs.astype(np.float32), 50, None, term_crit, 1, 0)
+    loss, assignments, vocabulary = cv.kmeans(train_descs.astype(np.float32), num_of_words, None, term_crit, 1, 0)
     # Creating vocabulary.npy file :
     np.save('vocabulary.npy', vocabulary)
     return vocabulary
@@ -166,13 +166,13 @@ def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
 
     return neighbours, class_pred
 
-def svm_one_versus_all_training(img_paths):
+def svm_one_versus_all_training(img_paths, svm_kernel_type):
     # SVM for motorbike training :
     print('Training SVM for motorbike ...')
     svm_motorbike = cv.ml.SVM_create()
     svm_motorbike.setType(cv.ml.SVM_C_SVC)
     svm_motorbike.setKernel(svm_kernel_type)
-    svm_motorbike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+    svm_motorbike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, 200, 1.e-06))
 
     labels_motorbike = []
     for i in img_paths:
@@ -188,7 +188,7 @@ def svm_one_versus_all_training(img_paths):
     svm_schoolbus = cv.ml.SVM_create()
     svm_schoolbus.setType(cv.ml.SVM_C_SVC)
     svm_schoolbus.setKernel(svm_kernel_type)
-    svm_schoolbus.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+    svm_schoolbus.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, 200, 1.e-06))
 
     labels_schoolbus = []
     for i in img_paths:
@@ -204,7 +204,7 @@ def svm_one_versus_all_training(img_paths):
     svm_bike = cv.ml.SVM_create()
     svm_bike.setType(cv.ml.SVM_C_SVC)
     svm_bike.setKernel(svm_kernel_type)
-    svm_bike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+    svm_bike.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, 200, 1.e-06))
 
     labels_bike = []
     for i in img_paths:
@@ -220,7 +220,7 @@ def svm_one_versus_all_training(img_paths):
     svm_airplane = cv.ml.SVM_create()
     svm_airplane.setType(cv.ml.SVM_C_SVC)
     svm_airplane.setKernel(svm_kernel_type)
-    svm_airplane.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+    svm_airplane.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, 200, 1.e-06))
 
     labels_airplane = []
     for i in img_paths:
@@ -236,7 +236,7 @@ def svm_one_versus_all_training(img_paths):
     svm_car = cv.ml.SVM_create()
     svm_car.setType(cv.ml.SVM_C_SVC)
     svm_car.setKernel(svm_kernel_type)
-    svm_car.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, max_num_iter, 1.e-06))
+    svm_car.setTermCriteria((cv.TERM_CRITERIA_COUNT + cv.TERM_CRITERIA_EPS, 200, 1.e-06))
 
     labels_car = []
     for i in img_paths:
@@ -410,102 +410,139 @@ def compute_accuracy(class_pred_list, class_exp_list):
 
     return motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc
 
-num_of_words = 50
+num_of_words_list = [50, 100, 150]
 
-# Creating vocabulary :
-# vocabulary = create_vocabulary(train_folders)
+for num_of_words in num_of_words_list:
 
-# Loading the created vocabulary :
-vocabulary = load_vocabulary()
+    # Creating vocabulary :
+    vocabulary = create_vocabulary(train_folders, num_of_words)
 
-# Creating index :
-# img_paths, img_paths_test, bow_descs = create_index(train_folders, test_folders, vocabulary)
+    # Loading the created vocabulary :
+    # vocabulary = load_vocabulary()
 
-# Loading the created index :
-img_paths, img_paths_test, bovw_descs = load_index()
+    # Creating index :
+    img_paths, img_paths_test, bovw_descs = create_index(train_folders, test_folders, vocabulary)
 
-k_vals = [5, 10, 20, 40, 80, 160, 320]
+    # Loading the created index :
+    # img_paths, img_paths_test, bovw_descs = load_index()
 
-knn_motorbike_list = []
-knn_schoolbus_list = []
-knn_bike_list = []
-knn_airplane_list = []
-knn_car_list = []
+    k_vals = [5, 20, 40, 60, 80, 100]
 
-knn_global_acc_list = []
+    knn_motorbike_list = []
+    knn_schoolbus_list = []
+    knn_bike_list = []
+    knn_airplane_list = []
+    knn_car_list = []
 
-for k_value in k_vals:
-    class_exp = ""
-    class_pred = ""
+    knn_global_acc_list = []
 
-    class_pred_list = []
-    class_exp_list = []
+    for k_value in k_vals:
+        class_exp = ""
+        class_pred = ""
 
-    # Testing of kNN classifier :
-    for test_image_path in img_paths_test:
+        class_pred_list = []
+        class_exp_list = []
 
-        # Measuring the test image's expected(known) class :
-        class_exp = extract_image_path_class_exp(test_image_path)
-        class_exp_list.append(class_exp)
+        # Testing of kNN classifier :
+        for test_image_path in img_paths_test:
 
-        # Extracting the test image's local features :
-        q_desc = extract_local_features(test_image_path)
+            # Measuring the test image's expected(known) class :
+            class_exp = extract_image_path_class_exp(test_image_path)
+            class_exp_list.append(class_exp)
 
-        # Extracting the test image's features based on the BOVW model :
-        q_bovw_desc = encode_bovw_descriptor(q_desc, vocabulary)
+            # Extracting the test image's local features :
+            q_desc = extract_local_features(test_image_path)
 
-        # # Parameter ok knn: number of neighbours :
-        # k = 300
-        neighbours, class_pred = knn_classifier(q_bovw_desc, bovw_descs, img_paths, k_value)
+            # Extracting the test image's features based on the BOVW model :
+            q_bovw_desc = encode_bovw_descriptor(q_desc, vocabulary)
 
-        class_pred_list.append(class_pred)
+            # # Parameter ok knn: number of neighbours :
+            # k = 300
+            neighbours, class_pred = knn_classifier(q_bovw_desc, bovw_descs, img_paths, k_value)
 
-        print("This belongs to the class:", class_pred, "   with neighbours:", neighbours)
+            class_pred_list.append(class_pred)
 
-    # Computing the accuracy of the knn classifier :
-    motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc = compute_accuracy(class_pred_list, class_exp_list)
+            print("This belongs to the class:", class_pred, "   with neighbours:", neighbours)
 
-    knn_results = [motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc]
+        # Computing the accuracy of the knn classifier :
+        motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc = compute_accuracy(class_pred_list, class_exp_list)
 
-    knn_motorbike_list.append(motorbike_acc)
-    knn_schoolbus_list.append(schoolbus_acc)
-    knn_bike_list.append(bike_acc)
-    knn_airplane_list.append(airplane_acc)
-    knn_car_list.append(car_acc)
+        knn_results = [motorbike_acc, schoolbus_acc, bike_acc, airplane_acc, car_acc, global_acc]
 
-    knn_global_acc_list.append(global_acc)
+        knn_motorbike_list.append(motorbike_acc)
+        knn_schoolbus_list.append(schoolbus_acc)
+        knn_bike_list.append(bike_acc)
+        knn_airplane_list.append(airplane_acc)
+        knn_car_list.append(car_acc)
 
-    print("knn results with k =", k_value, " are:", knn_results)
+        knn_global_acc_list.append(global_acc)
 
-# Plotting a diagram to indicate the dependency of the accuracy from the parameter k :
-plt.plot(k_vals,knn_motorbike_list, 'r-o',label='Motorbike accuracy.')
-plt.plot(k_vals,knn_schoolbus_list, 'g-o',label='School-bus accuracy.')
-plt.plot(k_vals,knn_bike_list,      'c-o',label='Bike accuracy.')
-plt.plot(k_vals,knn_airplane_list,  'm-o',label='Airplane accuracy.')
-plt.plot(k_vals,knn_car_list,       'b-o',label='Car accuracy.')
+        print("knn results with k =", k_value, " are:", knn_results)
 
-plt.plot(k_vals,knn_global_acc_list,'k-o',label='Global accuracy.')
-plt.title(label=('KNN Classifier with Number of words:', num_of_words))
-plt.xlabel('Parameter k')
-plt.ylabel('Types of Accuracy')
-plt.legend()
-plt.show()
+    # Plotting a diagram to indicate the dependency of the accuracy from the parameter k :
+    plt.plot(k_vals,knn_motorbike_list, 'r-o',label='Motorbike accuracy.')
+    plt.plot(k_vals,knn_schoolbus_list, 'g-o',label='School-bus accuracy.')
+    plt.plot(k_vals,knn_bike_list,      'c-o',label='Bike accuracy.')
+    plt.plot(k_vals,knn_airplane_list,  'm-o',label='Airplane accuracy.')
+    plt.plot(k_vals,knn_car_list,       'b-o',label='Car accuracy.')
 
-# Creating a global variable for the type of the svm kernel :
-svm_kernel_type = cv.ml.SVM_RBF
-# svm_kernel_type = cv.ml.SVM_LINEAR
-# svm_kernel_type = cv.ml.SVM_CHI2
+    plt.plot(k_vals,knn_global_acc_list,'k-o',label='Global accuracy.')
+    plt.title(label=('KNN Classifier with Number of words:', num_of_words))
+    plt.xlabel('Parameter k')
+    plt.ylabel('Types of Accuracy')
+    plt.legend()
+    plt.show()
 
-# Creating a global variable for the max number of iterations of the svm  :
-max_num_iter = 200
+    # Creating a list with the types of the svm kernel and a list with the tags of the corresponding types for the accuracy diagramm :
+    svm_kernel_type_list = [cv.ml.SVM_RBF, cv.ml.SVM_LINEAR, cv.ml.SVM_CHI2]
+    svm_kernel_type_list_tags = ["RBF", "LINEAR", "CHI2"]
 
-# SVM training :
-svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car = svm_one_versus_all_training(img_paths)
+    svm_motorbike_list = []
+    svm_schoolbus_list = []
+    svm_bike_list = []
+    svm_airplane_list = []
+    svm_car_list = []
 
-# SVM testing :
-svm_class_pred_list, svm_class_exp_list = svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car)
+    svm_global_acc_list = []
 
-# Computing the accuracy of the SVM classifier :
-svm_motorbike_acc, svm_schoolbus_acc, svm_bike_acc, svm_airplane_acc, svm_car_acc, svm_global_acc = compute_accuracy(svm_class_pred_list, svm_class_exp_list)
-results_svm = [svm_motorbike_acc, svm_schoolbus_acc, svm_bike_acc, svm_airplane_acc, svm_car_acc, svm_global_acc]
-print("Results of the classifier svm are:", results_svm)
+    for type in svm_kernel_type_list:
+        # svm_motorbike_list = []
+        # svm_schoolbus_list = []
+        # svm_bike_list = []
+        # svm_airplane_list = []
+        # svm_car_list = []
+        # svm_global_acc_list = []
+
+        # SVM training :
+        svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car = svm_one_versus_all_training(img_paths, type)
+
+        # SVM testing :
+        svm_class_pred_list, svm_class_exp_list = svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car)
+
+        # Computing the accuracy of the SVM classifier :
+        svm_motorbike_acc, svm_schoolbus_acc, svm_bike_acc, svm_airplane_acc, svm_car_acc, svm_global_acc = compute_accuracy(svm_class_pred_list, svm_class_exp_list)
+        results_svm = [svm_motorbike_acc, svm_schoolbus_acc, svm_bike_acc, svm_airplane_acc, svm_car_acc, svm_global_acc]
+        print("Results of the classifier svm are:", results_svm)
+
+        svm_motorbike_list.append(svm_motorbike_acc)
+        svm_schoolbus_list.append(svm_schoolbus_acc)
+        svm_bike_list.append(svm_bike_acc)
+        svm_airplane_list.append(svm_airplane_acc)
+        svm_car_list.append(svm_car_acc)
+
+        svm_global_acc_list.append(svm_global_acc)
+
+        # Plotting a diagram to indicate the dependency of the accuracy from the parameter SVM kernel type :
+
+    plt.plot(svm_kernel_type_list_tags, svm_motorbike_list, 'r-o', label='Motorbike accuracy.')
+    plt.plot(svm_kernel_type_list_tags, svm_schoolbus_list, 'g-o', label='School-bus accuracy.')
+    plt.plot(svm_kernel_type_list_tags, svm_bike_list, 'c-o', label='Bike accuracy.')
+    plt.plot(svm_kernel_type_list_tags, svm_airplane_list, 'm-o', label='Airplane accuracy.')
+    plt.plot(svm_kernel_type_list_tags, svm_car_list, 'b-o', label='Car accuracy.')
+
+    plt.plot(svm_kernel_type_list_tags, svm_global_acc_list, 'k-o', label='Global accuracy.')
+    plt.title(label=('SVM Classifier with Number of words:', num_of_words, "and type of kernel", str(type)))  # here may use sth like "str1" if "RBF" in type elif "str2" if "LINEAR" in type else ...
+    plt.xlabel('max iterations')
+    plt.ylabel('Types of Accuracy')
+    plt.legend()
+    plt.show()
