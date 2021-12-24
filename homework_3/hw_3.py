@@ -115,12 +115,6 @@ def load_index():
 
 def knn_classifier(q_bovw_desc, bovw_descs, img_paths, k):
 
-    # # Deleting the query's word from the bag of words:
-    # for row in range(bovw_descs.shape[0]):
-    #     if (bovw_descs[row, :] == q_bovw_desc).all():
-    #         bovw_descs_del = np.delete(bovw_descs, row, 0)
-    #         print("delete the row:", row)                       # may stay for some prints
-
     eucl_dist = []
     # Computing euclidean distance from the query word to all the other words:
     for row in range(bovw_descs.shape[0]):
@@ -261,7 +255,7 @@ def svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm
 
     for image_path in img_paths_test:
 
-        print("image path No:", image_path)
+        print("image path :", image_path)
 
         svm_class_exp = ""
         svm_class_pred = ""
@@ -443,7 +437,7 @@ for num_of_words in num_of_words_list:
         class_pred_list = []
         class_exp_list = []
 
-        # Testing of kNN classifier :
+        # Testing of kNN classifier on image_db_test :
         for test_image_path in img_paths_test:
 
             # Measuring the test image's expected(known) class :
@@ -506,12 +500,6 @@ for num_of_words in num_of_words_list:
     svm_global_acc_list = []
 
     for type in svm_kernel_type_list:
-        # svm_motorbike_list = []
-        # svm_schoolbus_list = []
-        # svm_bike_list = []
-        # svm_airplane_list = []
-        # svm_car_list = []
-        # svm_global_acc_list = []
 
         # SVM training :
         svm_motorbike, svm_schoolbus, svm_bike, svm_airplane, svm_car = svm_one_versus_all_training(img_paths, type)
@@ -532,8 +520,7 @@ for num_of_words in num_of_words_list:
 
         svm_global_acc_list.append(svm_global_acc)
 
-        # Plotting a diagram to indicate the dependency of the accuracy from the parameter SVM kernel type :
-
+    # Plotting a diagram to indicate the dependency of the accuracy from the parameter SVM kernel type :
     plt.plot(svm_kernel_type_list_tags, svm_motorbike_list, 'r-o', label='Motorbike accuracy.')
     plt.plot(svm_kernel_type_list_tags, svm_schoolbus_list, 'g-o', label='School-bus accuracy.')
     plt.plot(svm_kernel_type_list_tags, svm_bike_list, 'c-o', label='Bike accuracy.')
@@ -541,8 +528,7 @@ for num_of_words in num_of_words_list:
     plt.plot(svm_kernel_type_list_tags, svm_car_list, 'b-o', label='Car accuracy.')
 
     plt.plot(svm_kernel_type_list_tags, svm_global_acc_list, 'k-o', label='Global accuracy.')
-    plt.title(label=('SVM Classifier with Number of words:', num_of_words, "and type of kernel", str(type)))  # here may use sth like "str1" if "RBF" in type elif "str2" if "LINEAR" in type else ...
-    plt.xlabel('max iterations')
+    plt.title(label=('SVM Classifier with Number of words:', num_of_words, "and type of kernel", str(type)))
     plt.ylabel('Types of Accuracy')
     plt.legend()
     plt.show()
