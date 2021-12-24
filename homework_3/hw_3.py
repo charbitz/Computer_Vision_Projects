@@ -274,7 +274,6 @@ def svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm
             print('It is a motorbike')
         else:
             print('It is sth else')
-        # pass
 
         print("SVM classifier testing for school-bus:")
         response_schoolbus = svm_schoolbus.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
@@ -282,7 +281,6 @@ def svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm
             print('It is a school-bus')
         else:
             print('It is sth else')
-        # pass
 
         print("SVM classifier testing for touring-bike:")
         response_bike = svm_bike.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
@@ -290,7 +288,6 @@ def svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm
             print('It is a touring-bike')
         else:
             print('It is sth else')
-        # pass
 
         print("SVM classifier testing for aiplane:")
         response_airplane = svm_airplane.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
@@ -298,7 +295,6 @@ def svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm
             print('It is a aiplane')
         else:
             print('It is sth else')
-        # pass
 
         print("SVM classifier testing for car:")
         response_car = svm_car.predict(test_bovw_desc.astype(np.float32), flags=cv.ml.STAT_MODEL_RAW_OUTPUT)
@@ -306,7 +302,6 @@ def svm_one_versus_all_testing(img_paths_test, svm_motorbike, svm_schoolbus, svm
             print('It is a car')
         else:
             print('It is sth else')
-        # pass
 
         min_dist = min(response_motorbikes[1], response_schoolbus[1], response_bike[1], response_airplane[1],
                        response_car[1])
