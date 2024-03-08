@@ -4,4 +4,4 @@
 
 Image Input                |  Image Output
 :-------------------------:|:-------------------------:
-[]("dataset/4_original.png")   |  []("results/4_original_res.png")
+![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/dataset/4_original.png)   |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/results/4_original_res.png)
