@@ -1,6 +1,8 @@
 # Description
 This repo contains all 4 requested homeworks of the course **Computer Vision** of the 7th semester.
 
+* **This repo is for demonstration purposes only**
+
 ## HW1 - Document Image Analysis
 
 * Sub-text areas detection with bounding boxes.
