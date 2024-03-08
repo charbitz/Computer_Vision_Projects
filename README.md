@@ -1,5 +1,5 @@
 # Description
-This repo contains all 4 requested homeworks at the course **Computer Vision** of the 7th semester.
+This repo contains all 4 requested homeworks of the course **Computer Vision** of the 7th semester.
 
 ## HW1 - Document Image Analysis
 
