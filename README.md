@@ -1,4 +1,4 @@
-# Description
+# Homeworks Description
 This repo contains all 4 requested homeworks of the course **Computer Vision** of the 7th semester.
 
 ## HW1 - Document Image Analysis
@@ -23,4 +23,10 @@ This repo contains all 4 requested homeworks of the course **Computer Vision** o
 
 * Using a non-pretrained NN.
 * Using a pretrained MobileNet.
-* Classification assessment of both architectures using validation set.
+* Classification assessment of both architectures using validation-test set.
+
+# Image Datasets
+* HW1: Scanned documents with and without noise (salt and peper).
+* HW2: Custom images.
+* HW3: [Caltech 256 Image Dataset](https://www.kaggle.com/datasets/jessicali9530/caltech256)
+* HW4: [BelgiumTS - Belgian Traffic Sign Dataset](https://btsd.ethz.ch/shareddata/)
