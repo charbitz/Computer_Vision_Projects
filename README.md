@@ -25,7 +25,7 @@ This repo contains all 4 requested homeworks of the course **Computer Vision** o
 * Using a pretrained MobileNet.
 * Classification assessment of both architectures using validation-test set.
 
-# Image Datasets
+## Image Datasets
 * HW1: Scanned documents with and without noise (salt and peper).
 * HW2: Custom images.
 * HW3: [Caltech 256 Image Dataset](https://www.kaggle.com/datasets/jessicali9530/caltech256)
