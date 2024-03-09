@@ -17,7 +17,7 @@
 * optimizer: Adam
 * initial lr: 0.0001
 * loss: categorical crossentropy
-* data augmentations: {rotation, horizontal/vertical flip, brightness, zoom}
+* data augmentations: {rotation, horizontal flip, vertical flip, brightness, zoom}
 
 |                  |loss           |accuracy          |
 |------------------|---------------|------------------|
@@ -26,7 +26,20 @@
 | test set         |1.5507         |0.7073            |
 
 
+
+### * Pretrained MobileNet:
+* training epochs: 10
+* batch size: 40
+* optimizer: Adam
+* initial lr: 0.0001
+* loss: categorical crossentropy
+* data augmentations: {rotation, horizontal flip, vertical flip, brightness, zoom}
+
+|                  |loss           |accuracy          |
+|------------------|---------------|------------------|
+| train set        |0.6029         |0.8278            |
+| validation set   |0.3559         |0.9032            |
+| test set         |3.0853         |0.1936            |
+
+
 * ***The validation set occured from a split at the initial train set with a validation split percentage 0.2!***
-
-
-### * Pretrained MobileBet:
