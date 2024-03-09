@@ -34,6 +34,7 @@
 | global        |0.923            |<ins>0.943</ins> |0.884            |
 
 
+
 * ***Explanation: The number of optical words was selected from the test range of {50, 100, 150}, depending on the requested maximum <ins>global accuracy</ins> of the corresponding classifier!***
 
 * ***The maximum accuracies per class are being shown underlined***
