@@ -7,6 +7,9 @@
 * airplane
 * car
 
+|  motorbike  | school-bus  | touring-bike  | airplane  | car  |
+|---------|---------|---------|---------|---------|
+
 
 ### * k-NN Classifier:
 
