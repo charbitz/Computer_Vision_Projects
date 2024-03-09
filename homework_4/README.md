@@ -8,7 +8,7 @@
 
 **dataset:**
 
-|               |unique labels  |total images |
-|---------------|---------------|-------------|
-| train         |34             |3056         |
-| test          |34             |2149         |
+|                  |unique labels  |total images      |
+|------------------|---------------|------------------|
+| train set        |34             |3056              |
+| test set         |34             |2149              |
