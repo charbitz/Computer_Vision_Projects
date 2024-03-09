@@ -1,6 +1,7 @@
 # Accuracy Results of HW3 - Multi-Classs Image Classification using BOVW
 
-**classes:** |  motorbike  | school-bus  | touring-bike  | airplane  | car  |
+**classes:**
+|  motorbike  | school-bus  | touring-bike  | airplane  | car  |
 |---------|---------|---------|---------|---------|
 
 
