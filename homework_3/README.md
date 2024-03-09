@@ -24,22 +24,12 @@
 * for 150 optical words:
 
 
-|               |  SVM RBF    | SVM LINEAR  | SVM CHI2    |
-|---------------|-------------|-------------|-------------|
-| motorbike     |0.8          |<ins>0.9</ins>           |<ins>0.9</ins>           |
-| school-bus    |<ins>1</ins>             |<ins>1</ins>             |0.666        |
-| touring-bike  |<ins>0.909</ins>        |<ins>0.909</ins>        |<ins>0.909</ins>        |
-| airplane      |<ins>1</ins> |<ins>1</ins> |<ins>1</ins> |
-| car           |<ins>0.909</ins>        |<ins>0.909</ins>        |<ins>0.909</ins>        |
-| global        |0.923        |<ins>0.943</ins>         |0.884        |
+|               |  SVM RBF        | SVM LINEAR      | SVM CHI2        |
+|---------------|-----------------|-----------------|-----------------|
+| motorbike     |0.8              |<ins>0.9</ins>   |<ins>0.9</ins>   |
+| school-bus    |<ins>1</ins>     |<ins>1</ins>     |0.666            |
+| touring-bike  |<ins>0.909</ins> |<ins>0.909</ins> |<ins>0.909</ins> |
+| airplane      |<ins>1</ins>     |<ins>1</ins>     |<ins>1</ins>     |
+| car           |<ins>0.909</ins> |<ins>0.909</ins> |<ins>0.909</ins> |
+| global        |0.923            |<ins>0.943</ins> |0.884            |
 
-
-
-
-SVM RBF SVM LINEAR SVM CHI2
-motorbike 0.8 0.9 0.9
-school-bus 1 1 0.666
-touring-bike 0.909 0.909 0.909
-airplane 1 1 1
-car 0.909 0.909 0.909
-global 0.923 0.943 0.884
