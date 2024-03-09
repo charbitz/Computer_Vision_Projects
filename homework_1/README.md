@@ -1,28 +1,16 @@
 # Image Results of HW1 - Document Image Analysis
 
-## Sub-text areas:
+### * Image without Noise - Sub-text areas:
 
-### * Image without Noise:
-
-Image Input                |  Image Output
+Input Image                |  Output Image
 :-------------------------:|:-------------------------:
 ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/dataset/4_original.png)   |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/results/4_original_res.png)
 
-### * Image with Noise:
-
-Image Input                |  Image Output
-:-------------------------:|:-------------------------:
-![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/dataset/4_noise.png)   |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/results/4_noise_res.png)
-
-## Info :
-
-### * Image without Noise:
+### * Image without Noise - Measurements: 
 
 * threshold of otsu for  dataset/4_original.png  : 142.0
 * white pixels after thresholding:  570293
 * percentage of white pixels / all pixels : 0.00392156862745098
-
-/in array: 
 
 
 * ---- Region 1 : ----
@@ -181,7 +169,16 @@ Mean gray-level value in bounding box: 186.0648304213772
 
 
 
-### * Image with Noise:
+### * Image with Noise - Sub-text areas:
+
+
+Input Image                |  Output Image
+:-------------------------:|:-------------------------:
+![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/dataset/4_noise.png)   |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/results/4_noise_res.png)
+
+
+
+### * Image with Noise - Measurements: 
 
 threshold of otsu for  dataset/4_noise.png  : 146.0
 white pixels after thresholding:  552515
