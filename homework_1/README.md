@@ -172,7 +172,7 @@ Mean gray-level value in bounding box: 186.0648304213772
 ### Image with Noise - Sub-text areas:
 
 
-Input Image                |  Output Image
+input example image                |  output example image
 :-------------------------:|:-------------------------:
 ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/dataset/4_noise.png)   |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/results/4_noise_res.png)
 
