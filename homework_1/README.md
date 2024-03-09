@@ -25,72 +25,72 @@ Image Input                |  Image Output
 /in array: 
 
 
----- Region 1 : ----
+* ---- Region 1 : ----
 Area(px): 66442
 Bounding Box Area(px): 597120
 Number of words: 94
 Mean gray-level value in bounding box: 204.90672394158628
----- Region 2 : ----
+* ---- Region 2 : ----
 Area(px): 58698
 Bounding Box Area(px): 503908
 Number of words: 95
 Mean gray-level value in bounding box: 205.7501468522032
----- Region 3 : ----
+* ---- Region 3 : ----
 Area(px): 17226
 Bounding Box Area(px): 156317
 Number of words: 22
 Mean gray-level value in bounding box: 206.94250145537595
----- Region 4 : ----
+* ---- Region 4 : ----
 Area(px): 37021
 Bounding Box Area(px): 344880
 Number of words: 49
 Mean gray-level value in bounding box: 206.41122999304105
----- Region 5 : ----
+* ---- Region 5 : ----
 Area(px): 57921
 Bounding Box Area(px): 505920
 Number of words: 83
 Mean gray-level value in bounding box: 205.988701771031
----- Region 6 : ----
+* ---- Region 6 : ----
 Area(px): 79553
 Bounding Box Area(px): 693357
 Number of words: 112
 Mean gray-level value in bounding box: 204.60984745232255
----- Region 7 : ----
+* ---- Region 7 : ----
 Area(px): 17520
 Bounding Box Area(px): 158235
 Number of words: 24
 Mean gray-level value in bounding box: 206.92103516921034
----- Region 8 : ----
+* ---- Region 8 : ----
 Area(px): 82985
 Bounding Box Area(px): 746102
 Number of words: 139
 Mean gray-level value in bounding box: 206.52643070250448
----- Region 9 : ----
+* ---- Region 9 : ----
 Area(px): 82319
 Bounding Box Area(px): 703906
 Number of words: 126
 Mean gray-level value in bounding box: 203.8844859967098
----- Region 10 : ----
+* ---- Region 10 : ----
 Area(px): 18710
 Bounding Box Area(px): 154399
 Number of words: 22
 Mean gray-level value in bounding box: 203.83806889940996
----- Region 11 : ----
+* ---- Region 11 : ----
 Area(px): 23668
 Bounding Box Area(px): 208844
 Number of words: 42
 Mean gray-level value in bounding box: 206.30199574802245
----- Region 12 : ----
+* ---- Region 12 : ----
 Area(px): 18892
 Bounding Box Area(px): 154872
 Number of words: 29
 Mean gray-level value in bounding box: 203.0977581486647
----- Region 13 : ----
+* ---- Region 13 : ----
 Area(px): 461
 Bounding Box Area(px): 1404
 Number of words: 1
 Mean gray-level value in bounding box: 161.0897435897436
----- Region 14 : ----
+* ---- Region 14 : ----
 Area(px): 5019
 Bounding Box Area(px): 24325
 Number of words: 5
