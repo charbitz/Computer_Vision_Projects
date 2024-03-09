@@ -1,12 +1,12 @@
 # Image Results of HW1 - Document Image Analysis
 
-### * Image without Noise - Sub-text areas:
+### Image without Noise - Sub-text areas:
 
 Input Image                |  Output Image
 :-------------------------:|:-------------------------:
 ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/dataset/4_original.png)   |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/results/4_original_res.png)
 
-### * Image without Noise - Measurements: 
+### Image without Noise - Measurements: 
 
 * Threshold of Otsu for dataset/4_original.png  : 142.0
 * white pixels after Thresholding:  570293
@@ -169,7 +169,7 @@ Mean gray-level value in bounding box: 186.0648304213772
 
 
 
-### * Image with Noise - Sub-text areas:
+### Image with Noise - Sub-text areas:
 
 
 Input Image                |  Output Image
@@ -178,7 +178,7 @@ Input Image                |  Output Image
 
 
 
-### * Image with Noise - Measurements: 
+### Image with Noise - Measurements: 
 
 * Threshold of Otsu for dataset/4_noise.png  : 146.0
 * White pixels after Thresholding:  552515
