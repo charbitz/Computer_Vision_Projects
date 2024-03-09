@@ -2,7 +2,7 @@
 
 ### Image without Noise - Sub-text areas:
 
-Input Image                |  Output Image
+input example image                |  output example image
 :-------------------------:|:-------------------------:
 ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/dataset/4_original.png)   |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_1/results/4_original_res.png)
 
