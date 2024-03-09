@@ -8,9 +8,9 @@ Input Image                |  Output Image
 
 ### * Image without Noise - Measurements: 
 
-* threshold of otsu for  dataset/4_original.png  : 142.0
-* white pixels after thresholding:  570293
-* percentage of white pixels / all pixels : 0.00392156862745098
+* Threshold of Otsu for dataset/4_original.png  : 142.0
+* white pixels after Thresholding:  570293
+* Percentage of white pixels / all pixels : 0.00392156862745098
 
 
 * ---- Region 1 : ----
@@ -180,9 +180,9 @@ Input Image                |  Output Image
 
 ### * Image with Noise - Measurements: 
 
-threshold of otsu for  dataset/4_noise.png  : 146.0
-white pixels after thresholding:  552515
-percentage of white pixels / all pixels : 0.00392156862745098
+* Threshold of Otsu for dataset/4_noise.png  : 146.0
+* White pixels after Thresholding:  552515
+* Percentage of white pixels / all pixels : 0.00392156862745098
 
 * ---- Region 1 : ----
 
