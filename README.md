@@ -1,5 +1,6 @@
 # Description
 This repo contains all 4 requested homeworks of the course **Computer Vision** of the 7th semester.
+Inside each homework directory there is a README file where you can find a quick glance of the corresponding results.
 
 * **This repo is for demonstration purposes only**
 
