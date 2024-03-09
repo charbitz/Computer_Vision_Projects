@@ -5,9 +5,6 @@
 |---------|---------|---------|---------|---------|
 | ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_3/caltech/imagedb/145.motorbikes-101/145_0013.jpg)     |     ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_3/caltech/imagedb/178.school-bus/178_0018.jpg)    |    ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_3/caltech/imagedb/224.touring-bike/224_0022.jpg)     |  ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_3/caltech/imagedb/251.airplanes-101/251_0026.jpg)       |   ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_3/caltech/imagedb/252.car-side-101/252_0030.jpg)      |
 
-* ***Explanation: The number of optical words was selected from the test range of {50, 100, 150}, depending on the requested maximum <ins>global accuracy</ins> of the corresponding classifier!***
-
-* ***The maximum accuracies per class are being shown underlined***
 
 ### * k-NN Classifier:
 
@@ -36,3 +33,7 @@
 | car           |<ins>0.909</ins> |<ins>0.909</ins> |<ins>0.909</ins> |
 | global        |0.923            |<ins>0.943</ins> |0.884            |
 
+
+* ***Explanation: The number of optical words was selected from the test range of {50, 100, 150}, depending on the requested maximum <ins>global accuracy</ins> of the corresponding classifier!***
+
+* ***The maximum accuracies per class are being shown underlined***
