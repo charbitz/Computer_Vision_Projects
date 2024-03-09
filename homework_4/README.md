@@ -42,4 +42,4 @@
 | test set         |3.0853         |0.1936            |
 
 
-* ***The validation set occured from a split at the initial train set with a validation split percentage 0.2!***
+* ***The validation set occured from the initial train set with a validation split percentage 0.2!***
