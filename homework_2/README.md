@@ -9,22 +9,12 @@
 ![]() -->
 
 
-| Image 1 | Image 2 | Image 3 |
-|---------|---------|---------|
-| ![]()   | ![]()   | ![]()   |
-| ![]()   | ![]()   | ![]()   |
+| Image 1 | Image 2 | Image 3 | Image 4 | Image 5 |
+|---------|---------|---------|---------|---------|
+| ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_2/dataset/yard-house/yard-house-01.png
+)   | ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_2/dataset/yard-house/yard-house-02.png
+)   | ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_2/dataset/yard-house/yard-house-03.png
+)   | ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_2/dataset/yard-house/yard-house-04.png
+)   | ![](https://github.com/charbitz/Computer_Vision_Projects/blob/master/homework_2/dataset/yard-house/yard-house-05.png
+)   |
 
-| Image 1 | Image 2 |
-|---------|---------|
-| ![]()   | ![]()   |
-| ![]()   | ![]()   |
-| ![]()  |
-
-
-| Image 1 | Image 2 |
-|---------|---------|
-| ![]()   | ![]()   |
-
-| Image 3 |
-|---------|
-| ![]()   |
